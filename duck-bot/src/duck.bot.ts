@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { UpdateQuery } from "mongoose";
 
 import { Context, MiddlewareFn, Telegraf } from "telegraf";
 import { DuckSession, SessionDocument, SessionModel } from "./schemas/session";
@@ -21,14 +21,13 @@ export function session<T, TDoc extends mongoose.Document = mongoose.Document>(
   model: mongoose.Model<TDoc>
 ): MiddlewareFn<SessionContext<T, TDoc>> {
   const saveSession = (key: string, data: T) =>
-    model.updateOne(
-      ({ _id: key } as unknown) as FilterQuery<TDoc>,
+    model.findByIdAndUpdate(key,
       ({ $set: { data } } as unknown) as UpdateQuery<TDoc>,
       { upsert: true }
     );
 
   const getSession = async (key: string) => {
-    const session = await model.findOne({ _id: key } as FilterQuery<any>);
+    const session = await model.findById(key);
     return session?.toJSON<T>() ?? null;
   };
 

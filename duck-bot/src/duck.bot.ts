@@ -22,13 +22,13 @@ export function session<T, TDoc extends mongoose.Document = mongoose.Document>(
 ): MiddlewareFn<SessionContext<T, TDoc>> {
   const saveSession = (key: string, data: T) =>
     model.updateOne(
-      ({ key } as unknown) as FilterQuery<TDoc>,
+      ({ _id: key } as unknown) as FilterQuery<TDoc>,
       ({ $set: { data } } as unknown) as UpdateQuery<TDoc>,
       { upsert: true }
     );
 
   const getSession = async (key: string) => {
-    const session = await model.findOne({ key } as FilterQuery<any>);
+    const session = await model.findOne({ _id: key } as FilterQuery<any>);
     return session?.toJSON<T>() ?? null;
   };
 

@@ -9,14 +9,16 @@ export class DuckSession implements Session {
 }
 
 const SessionSchema = new mongoose.Schema(
-  {},
   {
-    strict: false,
+    key: String,
+    query: String,
+    vqd: String,
+    next: String,
   }
 );
 SessionSchema.loadClass(DuckSession);
 
-export type DuckSessionDocument = SessionDocument<DuckSession>;
+export type DuckSessionDocument = SessionDocument;
 
 export const DuckSessionModel = mongoose.model<DuckSessionDocument>(
   DuckSession.name,

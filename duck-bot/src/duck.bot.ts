@@ -8,16 +8,15 @@ import {
   DuckSessionModel,
 } from "./schemas/session";
 
-export class Session {
+export interface Session {
   key: string;
 }
 
-export interface SessionDocument<T extends Session>
-  extends mongoose.Document<T> {}
+export interface SessionDocument extends mongoose.Document {}
 
 export class SessionContext<
   T extends Session,
-  TDoc extends SessionDocument<T>
+  TDoc extends SessionDocument
 > extends Context {
   session: T;
 }
@@ -30,14 +29,14 @@ export const getSessionKey = ({ from, chat }: Context) => {
   return `${from.id}:${chat.id}`;
 };
 
-export function session<T extends Session, TDoc extends SessionDocument<T>>(
+export function session<T extends Session, TDoc extends SessionDocument>(
   model: mongoose.Model<TDoc>
 ): MiddlewareFn<SessionContext<T, TDoc>> {
   const saveSession = (key: string, data: T) =>
     model.findOneAndUpdate(
       ({ key } as unknown) as FilterQuery<TDoc>,
-      ({ $set: { data } } as unknown) as UpdateQuery<TDoc>,
-      { upsert: true }
+      (data as unknown) as UpdateQuery<TDoc>,
+      { upsert: true, strict: true }
     );
 
   const getSession = async (key: string) => {

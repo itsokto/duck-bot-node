@@ -4,22 +4,10 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import { Context, MiddlewareFn, Telegraf } from "telegraf";
 import { DuckSession, SessionDocument } from "./schemas/session";
 
-export class SessionContext<T, TDoc extends mongoose.Document> extends Context {
+export interface SessionContext<T, TDoc extends mongoose.Document>
+  extends Context {
   session: T | null;
   model: mongoose.Model<TDoc>;
-
-  async saveSession(key: string, data: T) {
-    await this.model.updateOne(
-      ({ key } as unknown) as FilterQuery<TDoc>,
-      ({ $set: { data } } as unknown) as UpdateQuery<TDoc>,
-      { upsert: true }
-    );
-  }
-
-  async getSession(key: string): Promise<T | null> {
-    const session = await this.model.findOne({ key } as FilterQuery<any>);
-    return session?.toJSON<T>() ?? null;
-  }
 }
 
 export const getSessionKey = ({ from, chat }: Context) => {
@@ -30,20 +18,33 @@ export const getSessionKey = ({ from, chat }: Context) => {
   return `${from.id}:${chat.id}`;
 };
 
-export function session(): MiddlewareFn<
-  SessionContext<DuckSession, SessionDocument>
-> {
+export function session<
+  T,
+  TDoc extends mongoose.Document = mongoose.Document
+>(): MiddlewareFn<SessionContext<T, TDoc>> {
+  const saveSession = (key: string, ctx: SessionContext<T, TDoc>) =>
+    ctx.model.updateOne(
+      ({ key } as unknown) as FilterQuery<TDoc>,
+      ({ $set: { ctx } } as unknown) as UpdateQuery<TDoc>,
+      { upsert: true }
+    );
+
+  const getSession = async (key: string, ctx: SessionContext<T, TDoc>) => {
+    const session = await ctx.model.findOne({ key } as FilterQuery<any>);
+    return session?.toJSON<T>() ?? null;
+  };
+
   return async (ctx, next) => {
     const key = getSessionKey(ctx);
 
     if (key) {
-      ctx.session = await ctx.getSession(key);
+      ctx.session = await getSession(key, ctx);
     }
 
     await next();
 
     if (key && ctx.session) {
-      await ctx.saveSession(key, ctx.session);
+      await saveSession(key, ctx);
     }
   };
 }
@@ -56,8 +57,8 @@ export const createBot = (token: string) => {
   bot.use(session());
 
   bot.command("/testctx", async (ctx) => {
-      ctx.session ??= new DuckSession();
-      ctx.session.query = "test";
+    ctx.session ??= new DuckSession();
+    ctx.session.query = "test";
     await ctx.reply(`Inline keyboard with callback ${ctx.session.query}`);
   });
 

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { SessionDocument, Session } from '../duck.bot';
+import { SessionDocument, Session } from "../duck.bot";
 
 export class DuckSession implements Session {
   key: string;
@@ -8,9 +8,17 @@ export class DuckSession implements Session {
   next: string;
 }
 
-const SessionSchema = new mongoose.Schema();
+const SessionSchema = new mongoose.Schema(
+  {},
+  {
+    strict: false,
+  }
+);
 SessionSchema.loadClass(DuckSession);
 
 export type DuckSessionDocument = SessionDocument<DuckSession>;
 
-export const DuckSessionModel = mongoose.model<DuckSessionDocument>(DuckSession.name, SessionSchema);
+export const DuckSessionModel = mongoose.model<DuckSessionDocument>(
+  DuckSession.name,
+  SessionSchema
+);

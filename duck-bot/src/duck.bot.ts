@@ -9,7 +9,7 @@ import {
   DuckSessionModel,
 } from "./schemas/session";
 
-export interface Session {
+export class Session {
   key: string;
 }
 
@@ -21,16 +21,6 @@ export class SessionContext<
   TDoc extends SessionDocument<T>
 > extends Context {
   session: T;
-
-  constructor(
-    readonly update: Update,
-    readonly tg: Telegram,
-    readonly botInfo: UserFromGetMe,
-    private sessionType: new () => T
-  ) {
-    super(update, tg, botInfo);
-    this.session = new this.sessionType();
-  }
 }
 
 export const getSessionKey = ({ from, chat }: Context) => {
@@ -62,7 +52,10 @@ export function session<T extends Session, TDoc extends SessionDocument<T>>(
     const key = getSessionKey(ctx);
 
     if (key) {
-      ctx.session.key = key;
+      if (!ctx.session) {
+        ctx.session = activator(ctx.session);
+      }
+
       const session = await getSession(key);
       if (session) {
         ctx.session = session;
@@ -75,6 +68,10 @@ export function session<T extends Session, TDoc extends SessionDocument<T>>(
       await saveSession(key, ctx.session);
     }
   };
+}
+
+function activator<T extends Session>(type: { new (): T }): T {
+  return new type();
 }
 
 export const createBot = (token: string) => {

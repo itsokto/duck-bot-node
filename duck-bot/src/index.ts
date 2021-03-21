@@ -12,7 +12,7 @@ const initialize = async () => {
 
   const bot = createBot(process.env.TELEGRAM_TOKEN ?? "");
 
-  bot.launch({ webhook: { hookPath: "/updates", port: 5000 } });
+  bot.launch({ webhook: { domain: process.env.WEBHOOK_DOMAIN, port: Number(process.env.PORT) } });
 };
 
 initialize();

@@ -1,8 +1,7 @@
 import * as mongoose from "mongoose";
 import { FilterQuery, UpdateQuery } from "mongoose";
 
-import { Context, MiddlewareFn, Telegraf, Telegram } from "telegraf";
-import { Update, UserFromGetMe } from "telegraf/typings/core/types/typegram";
+import { Context, MiddlewareFn, Telegraf } from "telegraf";
 import {
   DuckSession,
   DuckSessionDocument,
@@ -45,17 +44,14 @@ export function session<T extends Session, TDoc extends SessionDocument<T>>(
     const session = await model.findOne(({
       key,
     } as unknown) as FilterQuery<TDoc>);
-    return session?.toJSON<T>() ?? null;
+    return session?.toJSON<T>();
   };
 
   return async (ctx, next) => {
     const key = getSessionKey(ctx);
 
     if (key) {
-      if (!ctx.session) {
-        ctx.session = activator(ctx.session);
-      }
-
+      ctx.session.key = key;
       const session = await getSession(key);
       if (session) {
         ctx.session = session;
@@ -70,14 +66,11 @@ export function session<T extends Session, TDoc extends SessionDocument<T>>(
   };
 }
 
-function activator<T extends Session>(type: { new (): T }): T {
-  return new type();
-}
-
 export const createBot = (token: string) => {
   const bot = new Telegraf<SessionContext<DuckSession, DuckSessionDocument>>(
     token
   );
+  bot.context.session = new DuckSession();
 
   // session middleware MUST be initialized
   // before any commands or actions that require sessions

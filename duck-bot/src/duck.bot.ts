@@ -2,12 +2,11 @@ import * as mongoose from "mongoose";
 import { FilterQuery, UpdateQuery } from "mongoose";
 
 import { Context, MiddlewareFn, Telegraf } from "telegraf";
-import { DuckSession, SessionDocument } from "./schemas/session";
+import { DuckSession, SessionDocument, SessionModel } from "./schemas/session";
 
 export interface SessionContext<T, TDoc extends mongoose.Document>
   extends Context {
   session: T | null;
-  model: mongoose.Model<TDoc>;
 }
 
 export const getSessionKey = ({ from, chat }: Context) => {
@@ -18,19 +17,18 @@ export const getSessionKey = ({ from, chat }: Context) => {
   return `${from.id}:${chat.id}`;
 };
 
-export function session<
-  T,
-  TDoc extends mongoose.Document = mongoose.Document
->(): MiddlewareFn<SessionContext<T, TDoc>> {
-  const saveSession = (key: string, ctx: SessionContext<T, TDoc>) =>
-    ctx.model.updateOne(
+export function session<T, TDoc extends mongoose.Document = mongoose.Document>(
+  model: mongoose.Model<TDoc>
+): MiddlewareFn<SessionContext<T, TDoc>> {
+  const saveSession = (key: string, data: T) =>
+    model.updateOne(
       ({ key } as unknown) as FilterQuery<TDoc>,
-      ({ $set: { ctx } } as unknown) as UpdateQuery<TDoc>,
+      ({ $set: { data } } as unknown) as UpdateQuery<TDoc>,
       { upsert: true }
     );
 
-  const getSession = async (key: string, ctx: SessionContext<T, TDoc>) => {
-    const session = await ctx.model.findOne({ key } as FilterQuery<any>);
+  const getSession = async (key: string) => {
+    const session = await model.findOne({ key } as FilterQuery<any>);
     return session?.toJSON<T>() ?? null;
   };
 
@@ -38,13 +36,13 @@ export function session<
     const key = getSessionKey(ctx);
 
     if (key) {
-      ctx.session = await getSession(key, ctx);
+      ctx.session = await getSession(key);
     }
 
     await next();
 
     if (key && ctx.session) {
-      await saveSession(key, ctx);
+      await saveSession(key, ctx.session);
     }
   };
 }
@@ -54,7 +52,7 @@ export const createBot = (token: string) => {
 
   // session middleware MUST be initialized
   // before any commands or actions that require sessions
-  bot.use(session());
+  bot.use(session(SessionModel));
 
   bot.command("/testctx", async (ctx) => {
     ctx.session ??= new DuckSession();

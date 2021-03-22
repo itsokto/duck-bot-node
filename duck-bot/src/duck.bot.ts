@@ -11,6 +11,7 @@ import {
 import { InlineQueryResultPhoto } from "typegram";
 import { DuckApi, DuckImage, DuckResponse } from "duck-node";
 import { AxiosResponse } from "axios";
+import { v4 as uuid } from "uuid";
 
 export interface Session {
   key: string;
@@ -119,7 +120,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
       .map((image, i) => {
         const photoResult: InlineQueryResultPhoto = {
           type: "photo",
-          id: i.toString(),
+          id: uuid(),
           photo_url: image.image,
           thumb_url: image.thumbnail,
         };
@@ -131,6 +132,8 @@ export const createBot = (token: string, apiBaseUrl: string) => {
     const offset = next
       ? (inlineQueryResults.length + parseInt(inlineQuery.offset)).toString()
       : "";
+
+    console.log(inlineQuery.offset, offset);
 
     session.next = next;
     session.vqd = vqd;

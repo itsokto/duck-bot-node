@@ -8,7 +8,7 @@ import {
   DuckSessionModel,
 } from "./schemas/session";
 import { InlineQueryResultPhoto } from "typegram";
-import { DuckApi, DuckImage } from "duck-node";
+import { DuckApi } from "duck-node";
 
 export interface Session {
   key: string;
@@ -86,7 +86,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
 
   bot.on("inline_query", async (ctx) => {
     const response = await duckApi.getImages(ctx.inlineQuery.query);
-    const answer = response.data.results.map((image: DuckImage, i: number) => {
+    const answer = response.data.results.map((image, i) => {
       const inlineAnswer: InlineQueryResultPhoto = {
         type: "photo",
         id: i.toString(),

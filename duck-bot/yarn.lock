@@ -101,8 +101,10 @@ dotenv@^8.2.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
-duck-node@../duck-node/:
+duck-node@^1.0.0:
   version "1.0.0"
+  resolved "https://registry.yarnpkg.com/duck-node/-/duck-node-1.0.0.tgz#5166dda1875d14d03d5b44a077c90dab5e86fd7c"
+  integrity sha512-RV1ofFGm3JShiMs8jgI7zBP9JdtPdFzFT3+gw8tA0LBBl0vjb5QRXFtXs4ejbtK1P3zPthaa1PGliTUzJhFBYQ==
   dependencies:
     axios "^0.21.1"
 

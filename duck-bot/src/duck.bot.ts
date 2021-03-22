@@ -25,7 +25,8 @@ export class SessionContext<
   session: T;
 }
 
-export const getSessionKey = ({ from, chat }: Context) => {
+export const getSessionKey = ({ from, chat, update }: Context) => {
+  console.log("Get key: ", update);
   if (from == null || chat == null) {
     return null;
   }
@@ -36,12 +37,14 @@ export const getSessionKey = ({ from, chat }: Context) => {
 export function session<T extends Session, TDoc extends SessionDocument>(
   model: mongoose.Model<TDoc>
 ): MiddlewareFn<SessionContext<T, TDoc>> {
-  const saveSession = async (key: string, data: T) =>
-    await model.findOneAndUpdate(
+  const saveSession = async (key: string, data: T) => {
+    const update = await model.findOneAndUpdate(
       ({ key } as unknown) as FilterQuery<TDoc>,
       (data as unknown) as UpdateQuery<TDoc>,
-      { upsert: true, strict: true }
+      { upsert: true }
     );
+    console.log("Update session: ", update?.toJSON<T>());
+  };
 
   const getSession = async (key: string) => {
     const session = await model.findOne(({
@@ -55,7 +58,11 @@ export function session<T extends Session, TDoc extends SessionDocument>(
 
     if (key) {
       ctx.session.key = key;
+      console.log("Current session: ", ctx.session);
+
       const session = await getSession(key);
+      console.log("Get session: ", session);
+
       if (session) {
         ctx.session = session;
       }

@@ -8,10 +8,8 @@ import {
   DuckSessionDocument,
   DuckSessionModel,
 } from "./schemas/session";
-import { InlineQueryResultPhoto } from "typegram";
-import { DuckApi, DuckImage, DuckResponse } from "duck-node";
-import { AxiosResponse } from "axios";
-import { v4 as uuid } from "uuid";
+import { DuckApi } from "duck-node";
+import { ImagesService } from "./services/images.service";
 
 export interface Session {
   key: string;
@@ -83,6 +81,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
   bot.context.session = new DuckSession();
 
   const duckApi = new DuckApi(apiBaseUrl);
+  const imagesService = new ImagesService(duckApi);
 
   // session middleware MUST be initialized
   // before any commands or actions that require sessions
@@ -100,32 +99,16 @@ export const createBot = (token: string, apiBaseUrl: string) => {
       return;
     }
 
-    let response: AxiosResponse<DuckResponse<DuckImage>>;
+    const response = await imagesService.getImages(inlineQuery, session);
 
-    if (session.query === inlineQuery.query && session.vqd && session.next) {
-      response = await duckApi.getImagesNext(session.next, session.vqd);
-    } else {
-      response = await duckApi.getImages(inlineQuery.query);
-    }
-
-    const { results, vqd, next, query } = response.data;
+    const { results, vqd, next, query } = response;
 
     if (!results) {
       await ctx.answerInlineQuery(Array<InlineQueryResult>());
       return;
     }
 
-    const inlineQueryResults = results
-      .filter((_, i) => i < 50)
-      .map((image, i) => {
-        const photoResult: InlineQueryResultPhoto = {
-          type: "photo",
-          id: uuid(),
-          photo_url: image.image,
-          thumb_url: image.thumbnail,
-        };
-        return photoResult;
-      });
+    const inlineQueryResults = imagesService.getQueryInlineResults(results);
 
     let queryOffset = parseInt(inlineQuery.offset, 10);
     if (isNaN(queryOffset)) {

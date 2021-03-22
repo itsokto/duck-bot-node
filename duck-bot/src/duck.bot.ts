@@ -43,14 +43,14 @@ export function session<T extends Session, TDoc extends SessionDocument>(
       (data as unknown) as UpdateQuery<TDoc>,
       { upsert: true }
     );
-    console.log("Update session: ", update?.toJSON<T>());
+    console.log("Update session: ", update?.toJSON());
   };
 
   const getSession = async (key: string) => {
     const session = await model.findOne(({
       key,
     } as unknown) as FilterQuery<TDoc>);
-    return session?.toJSON<T>();
+    return session?.toJSON();
   };
 
   return async (ctx, next) => {
@@ -64,7 +64,7 @@ export function session<T extends Session, TDoc extends SessionDocument>(
       console.log("Get session: ", session);
 
       if (session) {
-        ctx.session = session;
+        Object.assign(ctx.session, session);
       }
     }
 

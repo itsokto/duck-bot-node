@@ -127,20 +127,20 @@ export const createBot = (token: string, apiBaseUrl: string) => {
         return photoResult;
       });
 
-    inlineQuery.offset ??= "0";
+    let queryOffset = parseInt(inlineQuery.offset, 10);
+    if (isNaN(queryOffset)) {
+      queryOffset = 0;
+    }
 
-    const offset = next
-      ? (inlineQueryResults.length + parseInt(inlineQuery.offset)).toString()
-      : "";
-
-    console.log(inlineQuery.offset, offset);
+    const offset = (inlineQueryResults.length + queryOffset).toString();
+    const nextOffset = next ? offset : "";
 
     session.next = next;
     session.vqd = vqd;
     session.query = query;
 
     await ctx.answerInlineQuery(inlineQueryResults, {
-      next_offset: offset,
+      next_offset: nextOffset,
     });
   });
 

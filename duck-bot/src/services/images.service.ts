@@ -9,7 +9,7 @@ import { AxiosResponse } from "axios";
 import { v4 as uuid } from "uuid";
 import path = require("path");
 
-type PhotoGif = InlineQueryResultPhoto | InlineQueryResultGif;
+type PhotoOrGif = InlineQueryResultPhoto | InlineQueryResultGif;
 
 export class ImagesService {
   constructor(private _duckApi: DuckApi) {}
@@ -29,7 +29,7 @@ export class ImagesService {
     return response.data;
   }
 
-  getQueryInlineResults(source: DuckImage[]): PhotoGif[] {
+  getQueryInlineResults(source: DuckImage[]): PhotoOrGif[] {
     return source.map((image) => {
       const ext = path.extname(image.image);
       switch (ext) {

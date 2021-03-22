@@ -36,8 +36,8 @@ export const getSessionKey = ({ from, chat }: Context) => {
 export function session<T extends Session, TDoc extends SessionDocument>(
   model: mongoose.Model<TDoc>
 ): MiddlewareFn<SessionContext<T, TDoc>> {
-  const saveSession = (key: string, data: T) =>
-    model.findOneAndUpdate(
+  const saveSession = async (key: string, data: T) =>
+    await model.findOneAndUpdate(
       ({ key } as unknown) as FilterQuery<TDoc>,
       (data as unknown) as UpdateQuery<TDoc>,
       { upsert: true, strict: true }

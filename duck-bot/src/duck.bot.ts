@@ -1,3 +1,4 @@
+import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
 import * as mongoose from "mongoose";
 import { FilterQuery, UpdateQuery } from "mongoose";
 
@@ -8,7 +9,8 @@ import {
   DuckSessionModel,
 } from "./schemas/session";
 import { InlineQueryResultPhoto } from "typegram";
-import { DuckApi } from "duck-node";
+import { DuckApi, DuckImage, DuckResponse } from "duck-node";
+import { AxiosResponse } from "axios";
 
 export interface Session {
   key: string;
@@ -85,23 +87,52 @@ export const createBot = (token: string, apiBaseUrl: string) => {
   });
 
   bot.on("inline_query", async (ctx) => {
-    const response = await duckApi.getImages(ctx.inlineQuery.query);
-    const answer = response.data.results.map((image, i) => {
-      const inlineAnswer: InlineQueryResultPhoto = {
-        type: "photo",
-        id: i.toString(),
-        photo_url: image.image,
-        thumb_url: image.thumbnail,
-      };
-      return inlineAnswer;
+    const { inlineQuery, session } = ctx;
+
+    if (!inlineQuery.query) {
+      return;
+    }
+
+    let response: AxiosResponse<DuckResponse<DuckImage>>;
+
+    if (session.query === inlineQuery.query && session.vqd && session.next) {
+      response = await duckApi.getImagesNext(session.next, session.vqd);
+    } else {
+      response = await duckApi.getImages(inlineQuery.query);
+    }
+
+    const { results, vqd, next, query } = response.data;
+
+    if (!results) {
+      await ctx.answerInlineQuery(Array<InlineQueryResult>());
+      return;
+    }
+
+    const inlineQueryResults = results
+      .filter((_, i) => i < 50)
+      .map((image, i) => {
+        const photoResult: InlineQueryResultPhoto = {
+          type: "photo",
+          id: i.toString(),
+          photo_url: image.image,
+          thumb_url: image.thumbnail,
+        };
+        return photoResult;
+      });
+
+    inlineQuery.offset ??= "0";
+
+    const offset = next
+      ? (inlineQueryResults.length + parseInt(inlineQuery.offset)).toString()
+      : "";
+
+    await ctx.answerInlineQuery(inlineQueryResults, {
+      next_offset: offset,
     });
 
-    await ctx.answerInlineQuery(
-      answer.filter((_, i) => i < 50),
-      {
-        next_offset: answer.length.toString(),
-      }
-    );
+    session.next = next;
+    session.vqd = vqd;
+    session.query = query;
   });
 
   return bot;

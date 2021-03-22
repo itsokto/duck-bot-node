@@ -90,13 +90,18 @@ export const createBot = (token: string, apiBaseUrl: string) => {
       const inlineAnswer: InlineQueryResultPhoto = {
         type: "photo",
         id: i.toString(),
-        photo_url: image.url,
+        photo_url: image.image,
         thumb_url: image.thumbnail,
       };
       return inlineAnswer;
     });
 
-    await ctx.answerInlineQuery(answer);
+    await ctx.answerInlineQuery(
+      answer.filter((_, i) => i < 50),
+      {
+        next_offset: answer.length.toString(),
+      }
+    );
   });
 
   return bot;

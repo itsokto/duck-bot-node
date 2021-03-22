@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "duck-node": "../duck-node/",
     "mongoose": "^5.12.1",
     "telegraf": "^4.3.0"
   }

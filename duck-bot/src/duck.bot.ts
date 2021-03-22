@@ -7,6 +7,8 @@ import {
   DuckSessionDocument,
   DuckSessionModel,
 } from "./schemas/session";
+import { InlineQueryResultPhoto } from "typegram";
+import { DuckApi, DuckImage } from "duck-node";
 
 export interface Session {
   key: string;
@@ -65,11 +67,13 @@ export function session<T extends Session, TDoc extends SessionDocument>(
   };
 }
 
-export const createBot = (token: string) => {
+export const createBot = (token: string, apiBaseUrl: string) => {
   const bot = new Telegraf<SessionContext<DuckSession, DuckSessionDocument>>(
     token
   );
   bot.context.session = new DuckSession();
+
+  const duckApi = new DuckApi(apiBaseUrl);
 
   // session middleware MUST be initialized
   // before any commands or actions that require sessions
@@ -78,6 +82,21 @@ export const createBot = (token: string) => {
   bot.command("/testctx", async (ctx) => {
     ctx.session.query = "test";
     await ctx.reply(`Inline keyboard with callback ${ctx.session.query}`);
+  });
+
+  bot.on("inline_query", async (ctx) => {
+    const response = await duckApi.getImages(ctx.inlineQuery.query);
+    const answer = response.data.results.map((image: DuckImage, i: number) => {
+      const inlineAnswer: InlineQueryResultPhoto = {
+        type: "photo",
+        id: i.toString(),
+        photo_url: image.url,
+        thumb_url: image.thumbnail,
+      };
+      return inlineAnswer;
+    });
+
+    await ctx.answerInlineQuery(answer);
   });
 
   return bot;

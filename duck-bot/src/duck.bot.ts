@@ -25,13 +25,15 @@ export class SessionContext<
   session: T;
 }
 
-export const getSessionKey = ({ from, chat, update }: Context) => {
-  console.log("Get key: ", update);
-  if (from == null || chat == null) {
-    return null;
+export const getSessionKey = ({ from, chat }: Context) => {
+  if (from == null) {
+    throw new Error("From is null");
   }
 
-  return `${from.id}:${chat.id}`;
+  const firstKey = from.id;
+  const secondKey = chat ? chat.id : firstKey;
+
+  return `${firstKey}:${secondKey}`;
 };
 
 export function session<T extends Session, TDoc extends SessionDocument>(
@@ -43,7 +45,6 @@ export function session<T extends Session, TDoc extends SessionDocument>(
       (data as unknown) as UpdateQuery<TDoc>,
       { upsert: true }
     );
-    console.log("Update session: ", update?.toJSON());
   };
 
   const getSession = async (key: string) => {
@@ -58,10 +59,8 @@ export function session<T extends Session, TDoc extends SessionDocument>(
 
     if (key) {
       ctx.session.key = key;
-      console.log("Current session: ", ctx.session);
 
       const session = await getSession(key);
-      console.log("Get session: ", session);
 
       if (session) {
         Object.assign(ctx.session, session);

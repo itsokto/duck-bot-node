@@ -34,6 +34,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
     }
 
     const response = await imagesService.getImages(inlineQuery, session);
+    console.log(response);
 
     const { results, vqd, next, query, queryEncoded } = response;
 

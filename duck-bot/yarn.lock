@@ -409,9 +409,9 @@ dotenv@^8.2.0:
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
 duck-node@^1.0.0:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/duck-node/-/duck-node-1.0.4.tgz#689b1bea0f03ca693baa463c9afea1fdb06c66f9"
-  integrity sha512-Q2+5yImex6PS6D8IOzVYCGno8tfkkm9YbbvtZXxQOrYoy5rz9MaOxP+RxKqdW6A7viKO+8ypmlvJob93d6p9yg==
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/duck-node/-/duck-node-1.0.5.tgz#4632f8f6f08aa614f9d5d18713898bb9d6f76210"
+  integrity sha512-2jBymkinqVuKtF4H/noL5Twu30DIWS9dU/58SRnB16jFQSF31YX+LoNON2j9YSwrA9Tt2EY86GYHQ0FWWSCAlw==
   dependencies:
     axios "^0.21.1"
 

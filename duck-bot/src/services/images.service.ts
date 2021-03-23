@@ -1,9 +1,5 @@
-import { DuckApi, DuckImage, DuckResponse } from "duck-node";
-import {
-  InlineQuery,
-  InlineQueryResultGif,
-  InlineQueryResultPhoto,
-} from "typegram";
+import { DuckApi, DuckImage, DuckResponse, DuckStrict } from "duck-node";
+import { InlineQuery, InlineQueryResultGif, InlineQueryResultPhoto } from "typegram";
 import { DuckSession } from "../schemas/session";
 import { v4 as uuid } from "uuid";
 import path = require("path");
@@ -13,20 +9,13 @@ type PhotoOrGif = InlineQueryResultPhoto | InlineQueryResultGif;
 export class ImagesService {
   constructor(private _duckApi: DuckApi) {}
 
-  async getImages(
-    inlineQuery: InlineQuery,
-    session: DuckSession
-  ): Promise<DuckResponse<DuckImage>> {
+  async getImages(inlineQuery: InlineQuery, session: DuckSession): Promise<DuckResponse<DuckImage>> {
     let response: DuckResponse<DuckImage>;
 
     if (session.query === inlineQuery.query && session.vqd && session.next) {
-      response = await this._duckApi
-        .next<DuckImage>(session.next, session.vqd)
-        .then((res) => res.data);
+      response = await this._duckApi.next<DuckImage>(session.next, session.vqd).then((res) => res.data);
     } else if (session.query !== inlineQuery.query) {
-      response = await this._duckApi
-        .getImages(inlineQuery.query)
-        .then((res) => res.data);
+      response = await this._duckApi.getImages(inlineQuery.query, session.strict).then((res) => res.data);
     } else {
       response = <DuckResponse<DuckImage>>{};
     }
@@ -47,10 +36,7 @@ export class ImagesService {
     });
   }
 
-  private mapToInlineQueryResult(
-    source: DuckImage,
-    ext: string
-  ): PhotoOrGif | null {
+  private mapToInlineQueryResult(source: DuckImage, ext: string): PhotoOrGif | null {
     switch (ext) {
       case ".jpeg":
       case ".jpg":

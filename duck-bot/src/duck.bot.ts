@@ -15,7 +15,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
   );
   bot.context.session = new DuckSession();
 
-  const duckApi = new DuckApi(apiBaseUrl);
+  const duckApi = new DuckApi();
   const imagesService = new ImagesService(duckApi);
 
   // session middleware MUST be initialized
@@ -35,7 +35,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
 
     const response = await imagesService.getImages(inlineQuery, session);
 
-    const { results, vqd, next, query } = response;
+    const { results, vqd, next, query, queryEncoded } = response;
 
     if (!results) {
       await ctx.answerInlineQuery(Array<InlineQueryResult>());
@@ -55,7 +55,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
     const nextOffset = next ? offset : "";
 
     session.next = next;
-    session.vqd = vqd;
+    session.vqd = vqd[queryEncoded];
     session.query = query;
 
     await ctx.answerInlineQuery(inlineQueryResults, {

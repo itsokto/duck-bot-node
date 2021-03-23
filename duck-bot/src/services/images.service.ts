@@ -21,7 +21,7 @@ export class ImagesService {
 
     if (session.query === inlineQuery.query && session.vqd && session.next) {
       response = await this._duckApi
-        .getImagesNext(session.next, session.vqd)
+        .next<DuckImage>(session.next, session.vqd)
         .then((res) => res.data);
     } else if (session.query !== inlineQuery.query) {
       response = await this._duckApi

@@ -5,7 +5,6 @@ import {
   InlineQueryResultPhoto,
 } from "typegram";
 import { DuckSession } from "../schemas/session";
-import { AxiosResponse } from "axios";
 import { v4 as uuid } from "uuid";
 import path = require("path");
 
@@ -18,39 +17,58 @@ export class ImagesService {
     inlineQuery: InlineQuery,
     session: DuckSession
   ): Promise<DuckResponse<DuckImage>> {
-    let response: AxiosResponse<DuckResponse<DuckImage>>;
+    let response: DuckResponse<DuckImage>;
 
     if (session.query === inlineQuery.query && session.vqd && session.next) {
-      response = await this._duckApi.getImagesNext(session.next, session.vqd);
+      response = await this._duckApi
+        .getImagesNext(session.next, session.vqd)
+        .then((res) => res.data);
+    } else if (session.query !== inlineQuery.query) {
+      response = await this._duckApi
+        .getImages(inlineQuery.query)
+        .then((res) => res.data);
     } else {
-      response = await this._duckApi.getImages(inlineQuery.query);
+      response = <DuckResponse<DuckImage>>{};
     }
 
-    return response.data;
+    return response;
   }
 
-  getQueryInlineResults(source: DuckImage[]): PhotoOrGif[] {
-    return source.map((image) => {
+  mapToInlineQueryResults(source: DuckImage[]): PhotoOrGif[] {
+    const allowedExt = [".jpeg", ".jpg", ".gif"];
+
+    return source.flatMap((image) => {
       const ext = path.extname(image.image);
-      switch (ext) {
-        case ".jpeg":
-        case ".jpg":
-          return {
-            type: "photo",
-            id: uuid(),
-            photo_url: image.image,
-            thumb_url: image.thumbnail,
-          };
-        case ".gif":
-          return {
-            type: "gif",
-            id: uuid(),
-            gif_url: image.image,
-            thumb_url: image.thumbnail,
-          };
-        default:
-          throw new Error(`${ext} is out of range.`);
+      if (allowedExt.includes(ext)) {
+        const inlineQueryResult = this.mapToInlineQueryResult(image, ext);
+        return inlineQueryResult ? [inlineQueryResult] : [];
       }
+      return <PhotoOrGif[]>[];
     });
+  }
+
+  private mapToInlineQueryResult(
+    source: DuckImage,
+    ext: string
+  ): PhotoOrGif | null {
+    switch (ext) {
+      case ".jpeg":
+      case ".jpg":
+        return {
+          type: "photo",
+          id: uuid(),
+          photo_url: source.image,
+          thumb_url: source.thumbnail,
+        };
+      case ".gif":
+        return {
+          type: "gif",
+          id: uuid(),
+          gif_url: source.image,
+          thumb_url: source.thumbnail,
+        };
+      default:
+        return null;
+    }
   }
 }

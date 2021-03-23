@@ -42,7 +42,9 @@ export const createBot = (token: string, apiBaseUrl: string) => {
       return;
     }
 
-    const inlineQueryResults = imagesService.mapToInlineQueryResults(results);
+    const inlineQueryResults = imagesService.mapToInlineQueryResults(
+      results.filter((_, i) => i < 50)
+    );
 
     let queryOffset = parseInt(inlineQuery.offset, 10);
     if (isNaN(queryOffset)) {

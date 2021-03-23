@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { DuckImage, DuckResponse } from "./models";
+import { DuckImage, DuckResponse, DuckStrict } from "./models";
 
 export class DuckApi {
   private readonly baseURL = "https://duckduckgo.com/";
@@ -34,11 +34,12 @@ export class DuckApi {
   }
 
   async getImages(
-    query: string
+    query: string,
+    strict: DuckStrict = DuckStrict.Off
   ): Promise<AxiosResponse<DuckResponse<DuckImage>>> {
     const vqd = await this.getToken(query);
     return this._client.get<DuckResponse<DuckImage>>("i.js", {
-      params: { q: query, vqd },
+      params: { q: query, p: strict, vqd },
     });
   }
 

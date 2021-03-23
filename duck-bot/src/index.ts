@@ -11,10 +11,7 @@ const initialize = async () => {
     useFindAndModify: false,
   });
 
-  const bot = createBot(
-    process.env.TELEGRAM_TOKEN ?? "",
-    process.env.API_BASE_URL ?? ""
-  );
+  const bot = createBot(process.env.TELEGRAM_TOKEN ?? "");
 
   bot.launch({
     webhook: {

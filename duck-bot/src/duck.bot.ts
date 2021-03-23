@@ -1,18 +1,12 @@
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
 import { Telegraf } from "telegraf";
-import {
-  DuckSession,
-  DuckSessionDocument,
-  DuckSessionModel,
-} from "./schemas/session";
+import { DuckSession, DuckSessionDocument, DuckSessionModel } from "./schemas/session";
 import { DuckApi } from "duck-node";
 import { ImagesService } from "./services/images.service";
 import { session, SessionContext } from "./session";
 
-export const createBot = (token: string, apiBaseUrl: string) => {
-  const bot = new Telegraf<SessionContext<DuckSession, DuckSessionDocument>>(
-    token
-  );
+export const createBot = (token: string): Telegraf<SessionContext<DuckSession, DuckSessionDocument>> => {
+  const bot = new Telegraf<SessionContext<DuckSession, DuckSessionDocument>>(token);
   bot.context.session = new DuckSession();
 
   const duckApi = new DuckApi();
@@ -34,7 +28,6 @@ export const createBot = (token: string, apiBaseUrl: string) => {
     }
 
     const response = await imagesService.getImages(inlineQuery, session);
-    console.log(response);
 
     const { results, vqd, next, query, queryEncoded } = response;
 
@@ -43,9 +36,7 @@ export const createBot = (token: string, apiBaseUrl: string) => {
       return;
     }
 
-    const inlineQueryResults = imagesService.mapToInlineQueryResults(
-      results.filter((_, i) => i < 50)
-    );
+    const inlineQueryResults = imagesService.mapToInlineQueryResults(results.filter((_, i) => i < 50));
 
     let queryOffset = parseInt(inlineQuery.offset, 10);
     if (isNaN(queryOffset)) {

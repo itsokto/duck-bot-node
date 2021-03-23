@@ -5,10 +5,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "npm run build && node dist/index.js",
-    "build": "rimraf dist && tsc",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "build:clean": "rimraf dist && tsc",
     "tsc": "tsc",
-    "postinstall": "npm run tsc",
+    "rimraf": "rimraf",
+    "heroku-postbuild": "yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

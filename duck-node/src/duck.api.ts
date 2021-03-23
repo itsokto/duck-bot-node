@@ -3,7 +3,7 @@ import { DuckImage, DuckResponse } from "./models";
 
 export class DuckApi {
   private readonly baseURL = "https://duckduckgo.com/";
-  private readonly regexp = new RegExp("vqd='(?<vqd>[d-]+)'", "im").compile();
+  private readonly regexp = new RegExp(`vqd='(?<vqd>[\d-]+)'`, "mi");
   private _client: AxiosInstance;
 
   constructor() {

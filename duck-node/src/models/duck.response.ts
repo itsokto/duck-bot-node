@@ -1,6 +1,7 @@
 export interface DuckResponse<T> {
-    vqd: string;
-    next: string;
-    results: T[];
-    query: string;
+  vqd: { [query: string]: string };
+  next: string;
+  results: T[];
+  query: string;
+  queryEncoded: string;
 }

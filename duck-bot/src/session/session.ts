@@ -8,10 +8,7 @@ export interface Session {
 
 export interface SessionDocument extends mongoose.Document {}
 
-export class SessionContext<
-  T extends Session,
-  TDoc extends SessionDocument
-> extends Context {
+export class SessionContext<T extends Session, TDoc extends SessionDocument> extends Context {
   session: T;
 }
 
@@ -27,13 +24,13 @@ export const getSessionKey = ({ from, chat }: Context): string => {
 };
 
 export function session<T extends Session, TDoc extends SessionDocument>(
-  model: mongoose.Model<TDoc>
+  model: mongoose.Model<TDoc>,
 ): MiddlewareFn<SessionContext<T, TDoc>> {
   const saveSession = async (key: string, data: T) => {
     const update = await model.findOneAndUpdate(
       ({ key } as unknown) as FilterQuery<TDoc>,
       (data as unknown) as UpdateQuery<TDoc>,
-      { upsert: true }
+      { upsert: true },
     );
   };
 

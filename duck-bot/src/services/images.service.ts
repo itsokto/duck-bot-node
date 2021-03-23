@@ -1,10 +1,11 @@
-import { DuckApi, DuckImage, DuckResponse, DuckStrict } from "duck-node";
+import { DuckApi, DuckImage, DuckResponse } from "duck-node";
 import { InlineQuery, InlineQueryResultGif, InlineQueryResultPhoto } from "typegram";
 import { DuckSession } from "../schemas/session";
 import { v4 as uuid } from "uuid";
 import path = require("path");
 
 type PhotoOrGif = InlineQueryResultPhoto | InlineQueryResultGif;
+const allowedExt = [".jpeg", ".jpg", ".gif"];
 
 export class ImagesService {
   constructor(private _duckApi: DuckApi) {}
@@ -24,8 +25,6 @@ export class ImagesService {
   }
 
   mapToInlineQueryResults(source: DuckImage[]): PhotoOrGif[] {
-    const allowedExt = [".jpeg", ".jpg", ".gif"];
-
     return source.flatMap((image) => {
       const ext = path.extname(image.image);
       if (allowedExt.includes(ext)) {

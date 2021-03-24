@@ -6,9 +6,7 @@ export interface Session {
   key: string;
 }
 
-export interface SessionDocument extends mongoose.Document {}
-
-export class SessionContext<T extends Session, TDoc extends SessionDocument> extends Context {
+export interface SessionContext<T extends Session, TDoc extends mongoose.Document<T>> extends Context {
   session: T;
 }
 
@@ -23,7 +21,7 @@ export const getSessionKey = ({ from, chat }: Context): string => {
   return `${firstKey}:${secondKey}`;
 };
 
-export function session<T extends Session, TDoc extends SessionDocument>(
+export function session<T extends Session, TDoc extends mongoose.Document<T>>(
   model: mongoose.Model<TDoc>,
 ): MiddlewareFn<SessionContext<T, TDoc>> {
   const saveSession = async (key: string, data: T) => {

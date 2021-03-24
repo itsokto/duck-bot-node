@@ -1,9 +1,11 @@
 import { Telegraf } from "telegraf";
 import { DuckSession, DuckSessionDocument, DuckSessionModel } from "./schemas/session";
-import { session, SessionContext } from "./session";
+import { session, SessionContext } from "./middlewares/session";
 
-export const createBot = (token: string): Telegraf<SessionContext<DuckSession, DuckSessionDocument>> => {
-  const bot = new Telegraf<SessionContext<DuckSession, DuckSessionDocument>>(token);
+export interface DuckContext extends SessionContext<DuckSession, DuckSessionDocument> {}
+
+export const createBot = (token: string): Telegraf<DuckContext> => {
+  const bot = new Telegraf<DuckContext>(token);
   bot.context.session = new DuckSession();
 
   // session middleware MUST be initialized

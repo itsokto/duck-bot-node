@@ -1,6 +1,6 @@
 import { DuckStrict } from "duck-node";
 import * as mongoose from "mongoose";
-import { Session, SessionDocument } from "../session";
+import { Session } from "../middlewares/session";
 
 export class DuckSession implements Session {
   key: string;
@@ -24,6 +24,6 @@ const SessionSchema = new mongoose.Schema({
 });
 SessionSchema.loadClass(DuckSession);
 
-export type DuckSessionDocument = SessionDocument;
+export type DuckSessionDocument = mongoose.Document<DuckSession>;
 
 export const DuckSessionModel = mongoose.model<DuckSessionDocument>("session", SessionSchema);

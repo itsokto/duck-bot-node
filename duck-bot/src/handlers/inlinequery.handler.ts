@@ -1,14 +1,14 @@
 import { DuckApi, DuckImage, DuckResponse } from "duck-node";
 import { Composer } from "telegraf";
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
-import { DuckSession, DuckSessionDocument } from "../schemas/session";
+import { DuckContext } from "../duck.bot";
+import { DuckSession } from "../schemas/session";
 import { ImagesService } from "../services/images.service";
-import { SessionContext } from "../session";
 
 const duckApi = new DuckApi();
 const imagesService = new ImagesService(duckApi);
 
-const composer = Composer.on<SessionContext<DuckSession, DuckSessionDocument>, "inline_query">(
+const composer = Composer.on<DuckContext, "inline_query">(
   "inline_query",
   async (ctx) => {
     const { inlineQuery, session } = ctx;

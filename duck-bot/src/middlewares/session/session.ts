@@ -36,7 +36,7 @@ export function session<T extends Session, TDoc extends mongoose.Document<T>>(
     const session = await model.findOne(({
       key,
     } as unknown) as FilterQuery<TDoc>);
-    return session?.toJSON();
+    return session?.toJSON({ virtuals: false });
   };
 
   return async (ctx, next) => {

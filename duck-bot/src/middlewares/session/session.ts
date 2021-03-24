@@ -28,9 +28,12 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
   }
 
   async getSession(key: string) {
-    const session = await this._model.findOne(({
-      key,
-    } as unknown) as FilterQuery<TDoc>);
+    const session = await this._model.findOne(
+      ({
+        key,
+      } as unknown) as FilterQuery<TDoc>,
+      "-_id",
+    );
     return session?.toJSON({ virtuals: false, versionKey: false });
   }
 

@@ -30,7 +30,7 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
   async getSession(key: string) {
     const session = await this._model.findOne(
       ({
-        key,
+        key: key,
       } as unknown) as FilterQuery<TDoc>,
       "-_id -key",
     );
@@ -39,10 +39,12 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
 
   async saveSession(key: string, data: T) {
     const update = await this._model.findOneAndUpdate(
-      ({ key } as unknown) as FilterQuery<TDoc>,
+      ({ key: key } as unknown) as FilterQuery<TDoc>,
       (data as unknown) as UpdateQuery<TDoc>,
       { upsert: true },
     );
+
+    return update;
   }
 
   session(): MiddlewareFn<SessionContext<T, TDoc>> {

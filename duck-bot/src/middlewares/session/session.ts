@@ -32,7 +32,7 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
       ({
         key,
       } as unknown) as FilterQuery<TDoc>,
-      "-_id",
+      "-_id -key",
     );
     return session?.toJSON({ virtuals: false, versionKey: false });
   }
@@ -49,12 +49,12 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
     return async (ctx, next) => {
       const key = this.getSessionKey(ctx);
 
-      ctx.session.key = key;
-
       const session = await this.getSession(key);
 
       if (session) {
         Object.assign(ctx.session, session);
+      } else {
+        ctx.session.key = key;
       }
 
       await next();

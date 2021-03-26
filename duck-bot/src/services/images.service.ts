@@ -2,6 +2,7 @@ import { DuckApi, DuckImage, DuckResponse } from "duck-node";
 import { InlineQuery, InlineQueryResultGif, InlineQueryResultPhoto } from "typegram";
 import { DuckSession } from "../schemas/session";
 import { v4 as uuid } from "uuid";
+import { AxiosError } from "axios";
 import path = require("path");
 
 type PhotoOrGif = InlineQueryResultPhoto | InlineQueryResultGif;
@@ -14,9 +15,15 @@ export class ImagesService {
     let response: DuckResponse<DuckImage>;
 
     if (session.query === inlineQuery.query && session.vqd && session.next) {
-      response = await this._duckApi.next<DuckImage>(session.next, session.vqd).then((res) => res.data);
+      response = await this._duckApi
+        .next<DuckImage>(session.next, session.vqd)
+        .then((res) => res.data)
+        .catch(this.handle403);
     } else if (session.query !== inlineQuery.query) {
-      response = await this._duckApi.getImages(inlineQuery.query, session.strict).then((res) => res.data);
+      response = await this._duckApi
+        .getImages(inlineQuery.query, session.strict)
+        .then((res) => res.data)
+        .catch(this.handle403);
     } else {
       response = <DuckResponse<DuckImage>>{};
     }
@@ -55,5 +62,14 @@ export class ImagesService {
       default:
         return null;
     }
+  }
+
+  private handle403(
+    err: AxiosError<DuckResponse<DuckImage>>,
+  ): DuckResponse<DuckImage> | PromiseLike<DuckResponse<DuckImage>> {
+    if (err.response?.status === 403) {
+      return err.response?.data;
+    }
+    throw err;
   }
 }

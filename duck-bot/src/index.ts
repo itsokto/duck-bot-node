@@ -6,7 +6,7 @@ import * as mongoose from "mongoose";
 import { createBot } from "./duck.bot";
 
 const initialize = async () => {
-  appInsights.setup().start();
+  appInsights.setup().setAutoDependencyCorrelation(true, true).setSendLiveMetrics(true).start();
 
   mongoose.connect(process.env.DB_CONNECTION_STRING ?? "", {
     useNewUrlParser: true,

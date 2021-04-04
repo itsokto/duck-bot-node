@@ -18,14 +18,14 @@ const composer = Composer.on<DuckContext, "inline_query">(
       return;
     }
 
-    const response = await imagesService.getImages(inlineQuery, session);
+    const response = await imagesService.getImages(inlineQuery.query, session);
 
     if (!response.results) {
       await ctx.answerInlineQuery(Array<InlineQueryResult>());
       return;
     }
 
-    const inlineQueryResults = imagesService.mapToInlineQueryResults(response.results).filter((_, i) => i < 50);
+    const inlineQueryResults = imagesService.mapToInlineQueryResults(response.results);
 
     const nextOffset = response.next ? getNextOffset(inlineQuery.offset, inlineQueryResults.length) : "";
 

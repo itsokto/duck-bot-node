@@ -28,20 +28,13 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
   }
 
   async getSession(key: string) {
-    const session = await this._model
-      .findOne(
-        ({
-          key: key,
-        } as unknown) as FilterQuery<TDoc>,
-        "-_id -key",
-      )
-      .exec();
+    const session = await this._model.findOne(({ key } as unknown) as FilterQuery<TDoc>, "-_id -key").exec();
     return session?.toJSON({ virtuals: false, versionKey: false });
   }
 
   async saveSession(key: string, data: T) {
     const update = await this._model
-      .findOneAndUpdate(({ key: key } as unknown) as FilterQuery<TDoc>, (data as unknown) as UpdateQuery<TDoc>, {
+      .findOneAndUpdate(({ key } as unknown) as FilterQuery<TDoc>, (data as unknown) as UpdateQuery<TDoc>, {
         upsert: true,
       })
       .exec();
@@ -57,13 +50,11 @@ export class MongooseSession<T extends Session, TDoc extends mongoose.Document<T
 
       if (session) {
         Object.assign(ctx.session, session);
-      } else {
-        ctx.session.key = key;
       }
 
       await next();
 
-      await this.saveSession(key, ctx.session);
+      await this.saveSession(key, session ? ctx.session : <T>{});
     };
   }
 }

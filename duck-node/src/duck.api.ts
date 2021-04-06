@@ -9,14 +9,16 @@ export class DuckApi {
   constructor() {
     this._client = axios.create({
       baseURL: this.baseURL,
-      params: { o: "json", f: ",,,", l: "us-en" },
-    });
-
-    this._client.interceptors.request.use((config) => {
-      if (config.url === config.baseURL) {
-        config.params = { q: config.params["q"] };
-      }
-      return config;
+      headers: {
+        accept: "application/json, text/javascript, */*; q=0.01",
+        "accept-language": "en-US,en;q=0.9",
+        referer: "https://duckduckgo.com/",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent":
+          "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36",
+        "x-requested-with": "XMLHttpRequest",
+      },
     });
   }
 
@@ -39,7 +41,7 @@ export class DuckApi {
   ): Promise<AxiosResponse<DuckResponse<DuckImage>>> {
     const vqd = await this.getToken(query);
     return this._client.get<DuckResponse<DuckImage>>("i.js", {
-      params: { q: query, p: strict, vqd },
+      params: { q: query, p: strict, vqd, o: "json", f: ",,,", l: "us-en" },
     });
   }
 

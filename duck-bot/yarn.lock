@@ -462,10 +462,10 @@ dotenv@^8.2.0:
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-8.2.0.tgz"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
 
-duck-node@^1.0.0:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/duck-node/-/duck-node-1.0.5.tgz#4632f8f6f08aa614f9d5d18713898bb9d6f76210"
-  integrity sha512-2jBymkinqVuKtF4H/noL5Twu30DIWS9dU/58SRnB16jFQSF31YX+LoNON2j9YSwrA9Tt2EY86GYHQ0FWWSCAlw==
+duck-node@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/duck-node/-/duck-node-1.0.6.tgz#562ed88eeddc694dea33831c5201176ac607d4bf"
+  integrity sha512-5WG0l8D6jXW5fwyZ39WxYARMvKpwHtUQyySkS7LzX/UDkqFeZM7U7b6TZP6MopGvC6Z5XD5jNd+8OId9wpnTRw==
   dependencies:
     axios "^0.21.1"
 

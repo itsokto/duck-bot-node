@@ -110,6 +110,7 @@ dist
 
 # Yarn
 .yarn/*
+!.yarn/releases
 
 # IDEA
 .idea/*

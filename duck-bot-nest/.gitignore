@@ -18,7 +18,7 @@ lerna-debug.log*
 /.nyc_output
 
 # IDEs and editors
-.idea
+.idea/*
 .project
 .classpath
 .c9/
@@ -28,16 +28,6 @@ lerna-debug.log*
 
 # IDE - VSCode
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 # Yarn
 .yarn/*
-!.yarn/cache
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions

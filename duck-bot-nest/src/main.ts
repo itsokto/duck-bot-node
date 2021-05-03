@@ -4,6 +4,7 @@ import appInsights = require('applicationinsights');
 
 async function bootstrap() {
   appInsights.setup().setAutoDependencyCorrelation(true, true).setSendLiveMetrics(true).start();
-  await NestFactory.createApplicationContext(AppModule);
+  const app = await NestFactory.create(AppModule);
+  await app.listenAsync(process.env.PORT || 3000);
 }
 bootstrap();

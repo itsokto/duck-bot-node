@@ -2361,6 +2361,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"class-transformer@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "class-transformer@npm:0.4.0"
+  checksum: 915db337796f6a4d0c2c09bf1c0214eff01e1247836524fdaa170f0c3457f4b5f9ece1068cdb2667e42e01572aa1b08b9995c298f2956d1c8a84884c8d5ea5ff
+  languageName: node
+  linkType: hard
+
 "class-utils@npm:^0.3.5":
   version: 0.3.6
   resolution: "class-utils@npm:0.3.6"
@@ -2942,6 +2949,7 @@ __metadata:
     "@typescript-eslint/parser": ^4.15.2
     applicationinsights: ^1.8.10
     axios: ^0.21.1
+    class-transformer: ^0.4.0
     duck-node: ^1.0.7
     eslint: ^7.25.0
     eslint-config-prettier: ^8.3.0

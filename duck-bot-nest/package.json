@@ -28,6 +28,7 @@
     "@nestjs/typeorm": "^7.1.5",
     "applicationinsights": "^1.8.10",
     "axios": "^0.21.1",
+    "class-transformer": "^0.4.0",
     "duck-node": "^1.0.7",
     "nestjs-telegraf": "^2.2.2",
     "pg": "^8.6.0",

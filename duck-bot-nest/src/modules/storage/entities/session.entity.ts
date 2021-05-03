@@ -14,7 +14,7 @@ export class SessionEntity {
   @Column({ type: 'varchar', length: 150, nullable: true })
   vqd: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
+  @Column({ type: 'varchar', length: 200, nullable: true })
   next: string;
 
   @Column({ default: DuckStrict.Off })

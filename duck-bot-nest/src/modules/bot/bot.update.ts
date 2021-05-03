@@ -11,12 +11,23 @@ export class BotUpdate {
 
   @Start()
   async startCommand(@Ctx() ctx: SessionContext<SessionEntity>) {
-    await ctx.reply(`Hey! Try typing @${ctx.botInfo.username} funny cat here 😼`);
+    await ctx.reply(`Hi! Try typing @${ctx.botInfo.username} little duck here or press button below.`, {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: 'Search for little 🦆',
+              switch_inline_query_current_chat: 'little duck',
+            },
+          ],
+        ],
+      },
+    });
   }
 
   @Help()
   async helpCommand(ctx: SessionContext<SessionEntity>) {
-    await ctx.reply(`Just start typing @${ctx.botInfo.username} funny cat in any chat 😸`);
+    await ctx.reply(`Just start typing @${ctx.botInfo.username} 'something' in any chat.`);
   }
 
   @InlineQuery(/.*/)

@@ -14,7 +14,7 @@ export async function getSessionKey(ctx: Context): Promise<string> {
     return undefined;
   }
 
-  if (ctx.updateType === 'inline_query') {
+  if (ctx.updateType === 'inline_query' || ctx.updateType === 'callback_query') {
     return `${fromId}:${fromId}`;
   }
 

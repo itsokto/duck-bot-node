@@ -1,0 +1,11 @@
+{
+  "type": "postgres",
+  "url": "",
+  "ssl": {"rejectUnauthorized": false},
+  "entities": ["src/modules/storage/entities/*.entity.{ts,js}"],
+  "migrations": ["src/migrations/*.{ts,js}"],
+  "cli": {
+    "entitiesDir": "src/modules/storage/entities",
+    "migrationsDir": "src/migrations"
+  }
+}

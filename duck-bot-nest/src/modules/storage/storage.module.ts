@@ -1,7 +1,7 @@
 import { Injectable, Module } from '@nestjs/common';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { SessionEntity } from './entities/session.entity';
-import { TypeOrmStorage } from '../../middlewares/session.middleware';
+import { TypeOrmStorage } from '@middlewares/session.middleware';
 import { Repository } from 'typeorm';
 
 @Injectable()

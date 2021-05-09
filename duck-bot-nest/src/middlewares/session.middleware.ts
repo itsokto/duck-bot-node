@@ -1,29 +1,10 @@
 import { Repository } from 'typeorm';
-import { SessionStore } from 'telegraf/typings/session';
-import { Context } from 'telegraf';
+import { SessionStore, SessionContext } from 'telegraf/typings/session';
+import { Context, MiddlewareFn, session } from 'telegraf';
 
 type KeyColumn = 'key';
 const key: KeyColumn = 'key';
 const omitKeys = [key, '__scenes'];
-
-export async function getSessionKey(ctx: Context): Promise<string> {
-  const fromId = ctx.from?.id;
-  const chatId = ctx.chat?.id;
-
-  if (!fromId) {
-    return undefined;
-  }
-
-  if (ctx.updateType === 'inline_query' || ctx.updateType === 'callback_query') {
-    return `${fromId}:${fromId}`;
-  }
-
-  if (!chatId) {
-    return undefined;
-  }
-
-  return `${fromId}:${chatId}`;
-}
 
 export class TypeOrmStorage<T extends Pick<T, KeyColumn>> implements SessionStore<T> {
   constructor(private _repository: Repository<T>) {}
@@ -53,4 +34,36 @@ export class TypeOrmStorage<T extends Pick<T, KeyColumn>> implements SessionStor
   delete(name: string): Promise<any> {
     return this._repository.delete(name);
   }
+}
+
+async function getSessionKey(ctx: Context): Promise<string> {
+  const fromId = ctx.from?.id;
+  const chatId = ctx.chat?.id;
+
+  if (!fromId) {
+    return undefined;
+  }
+
+  if (ctx.updateType === 'inline_query' || ctx.updateType === 'callback_query') {
+    return `${fromId}:${fromId}`;
+  }
+
+  if (!chatId) {
+    return undefined;
+  }
+
+  return `${fromId}:${chatId}`;
+}
+
+type SessionOptions<S> = {
+  getSessionKey?: (ctx: Context) => Promise<string | undefined>;
+  store?: SessionStore<S>;
+};
+
+export function telegrafSession<S extends Record<string, any>>(
+  options?: SessionOptions<S>,
+): MiddlewareFn<SessionContext<S>> {
+  options.getSessionKey ??= getSessionKey;
+
+  return session(options);
 }

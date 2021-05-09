@@ -1,11 +1,12 @@
 import { Environment, EnvironmentConfig } from '@common/types/environment.config';
-import { getSessionKey } from '../../../middlewares/session.middleware';
 import { Injectable } from '@nestjs/common';
 import { TelegrafModuleOptions, TelegrafOptionsFactory } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
-import { session, Telegraf } from 'telegraf';
+import { Telegraf } from 'telegraf';
 import { TelegramSessionStorage } from '@modules/storage';
 import { BotModule } from '@modules/bot';
+import { telegrafSession } from '@middlewares/session.middleware';
+import { throttler } from '@middlewares/throttler.middleware';
 
 @Injectable()
 export class TelegrafConfigService implements TelegrafOptionsFactory {
@@ -27,7 +28,7 @@ export class TelegrafConfigService implements TelegrafOptionsFactory {
       token: this._configService.get<string>('TELEGRAM_TOKEN'),
       include: [BotModule],
       launchOptions: launchOptions,
-      middlewares: [session({ store: this._storage, getSessionKey: getSessionKey })],
+      middlewares: [throttler(env), telegrafSession({ store: this._storage })],
     };
   }
 }

@@ -11,7 +11,7 @@ export function throttler(env: Environment = Environment.Development): Middlewar
 
   return telegrafThrottler({
     in: {
-      highWater: 0, // Queue length
+      highWater: 1, // Queue length
       maxConcurrent: 1, // Only 1 job at a time
       minTime: 1000, // Wait this many milliseconds to be ready, after a job
     },

@@ -1,5 +1,5 @@
 export enum CallBackDataType {
-  StrictCommand = "strict_command"
+  StrictCommand = 'strict_command',
 }
 
 export class CallbackData {

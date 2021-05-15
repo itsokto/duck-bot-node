@@ -104,7 +104,7 @@ export class BotUpdate {
 function* generateKeyboard(defaultValue?: DuckStrict): Generator<InlineKeyboardButton, void> {
   const keys = Object.entries(DuckStrict).filter(([, value]) => typeof value === 'number');
 
-  for (let [key, value] of keys) {
+  for (const [key, value] of keys) {
     const data: CallbackData = {
       type: CallBackDataType.StrictCommand,
       data: value,

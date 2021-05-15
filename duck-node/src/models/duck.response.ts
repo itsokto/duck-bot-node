@@ -1,5 +1,5 @@
 export interface DuckResponse<T> {
-  vqd: { [query: string]: string };
+  vqd: Record<string, string>;
   next: string;
   results: T[];
   query: string;

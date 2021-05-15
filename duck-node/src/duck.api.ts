@@ -13,26 +13,23 @@ export class DuckApi {
 
   async getToken(query: string): Promise<String> {
     const page = await this._client
-      .get<string>("", {
+      .get<string>('', {
         params: { q: query },
       })
       .then((res) => res.data);
 
     const math = constants.vqdRegex.exec(page);
     if (math && math.groups) {
-      return math.groups["vqd"];
+      return math.groups['vqd'];
     }
 
-    throw "No match for vqd-token.";
+    throw 'No match for vqd-token.';
   }
 
-  async getImages(
-    query: string,
-    strict: DuckStrict = DuckStrict.Off
-  ): Promise<AxiosResponse<DuckResponse<DuckImage>>> {
+  async getImages(query: string, strict: DuckStrict = DuckStrict.Off): Promise<AxiosResponse<DuckResponse<DuckImage>>> {
     const vqd = await this.getToken(query);
-    return this._client.get<DuckResponse<DuckImage>>("i.js", {
-      params: { q: query, p: strict, vqd, o: "json", f: ",,,", l: "us-en" },
+    return this._client.get<DuckResponse<DuckImage>>('i.js', {
+      params: { q: query, p: strict, vqd, o: 'json', f: ',,,', l: 'us-en' },
     });
   }
 

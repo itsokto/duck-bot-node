@@ -1,14 +1,14 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { DuckImage, DuckResponse, DuckStrict } from "./models";
-import constants from "./constants";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { DuckImage, DuckResponse, DuckStrict } from './models';
+import constants from './constants';
 
 export class DuckApi {
   private _client: AxiosInstance;
 
-  constructor() {
-    this._client = axios.create({
-      baseURL: constants.baseURL,
-    });
+  constructor(axiosConfig?: AxiosRequestConfig) {
+    axiosConfig ??= {};
+    axiosConfig.baseURL ??= constants.baseURL;
+    this._client = axios.create(axiosConfig);
   }
 
   async getToken(query: string): Promise<String> {

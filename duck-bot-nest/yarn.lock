@@ -1051,6 +1051,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chance@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@types/chance@npm:1.1.1"
+  checksum: e422d66bc643b164ff548e2117374e1096d076563f9288ce5e6635e0a269a97909c01e66b24c98a46c779dc9621bb5701f246eda1c9eb620b33c64df02df9843
+  languageName: node
+  linkType: hard
+
 "@types/continuation-local-storage@npm:*":
   version: 3.2.3
   resolution: "@types/continuation-local-storage@npm:3.2.3"
@@ -2359,6 +2366,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chance@npm:^1.1.7":
+  version: 1.1.7
+  resolution: "chance@npm:1.1.7"
+  checksum: 7d2b938178c1c384fcb483d6afa9feeb73949c8f5a8a133599df09c3437a43bb7d5e955d000faa01760a48da18c755ffcf51a9e7707ea3290d6a5231822e0bbe
+  languageName: node
+  linkType: hard
+
 "char-regex@npm:^1.0.2":
   version: 1.0.2
   resolution: "char-regex@npm:1.0.2"
@@ -2999,6 +3013,7 @@ __metadata:
     "@nestjs/schematics": ^7.3.1
     "@nestjs/testing": ^7.6.15
     "@nestjs/typeorm": ^7.1.5
+    "@types/chance": ^1.1.1
     "@types/jest": ^26.0.23
     "@types/node": ^14.14.45
     "@types/sequelize": ^4.28.9
@@ -3007,12 +3022,13 @@ __metadata:
     "@typescript-eslint/parser": ^4.23.0
     applicationinsights: ^2.0.0
     axios: ^0.21.1
-    bottleneck: ^2.19.5
+    chance: ^1.1.7
     class-transformer: ^0.4.0
-    duck-node: ^1.1.0
+    duck-node: ^1.1.4
     eslint: ^7.26.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^3.4.0
+    https-proxy-agent: ^5.0.0
     jest: ^26.6.3
     nestjs-telegraf: ^2.2.2
     pg: ^8.6.0
@@ -3030,16 +3046,15 @@ __metadata:
     typegram: ^3.3.1
     typeorm: ^0.2.32
     typescript: ^4.2.4
-    uuid: ^8.3.2
   languageName: unknown
   linkType: soft
 
-"duck-node@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "duck-node@npm:1.1.0"
+"duck-node@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "duck-node@npm:1.1.4"
   dependencies:
     axios: ^0.21.1
-  checksum: 871ec2c82e0be1f32988624c0a0717cda652a1ab7241c0a780977976eaa22d7c589611c269bb744e3cbe4b8fd17156f3a3adde6d1fec0f8d9cb1de272c492318
+  checksum: 4c02456aa384e537455c70351b0d0aea5d8efaf585bccdfaeecce2c82612a99c03a89c841d6d12f218d04d56661f2e2beeed094afd5f7cd97f7f689085e68dcd
   languageName: node
   linkType: hard
 
@@ -8282,7 +8297,7 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"uuid@npm:8.3.2, uuid@npm:^8.3.0, uuid@npm:^8.3.2":
+"uuid@npm:8.3.2, uuid@npm:^8.3.0":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:

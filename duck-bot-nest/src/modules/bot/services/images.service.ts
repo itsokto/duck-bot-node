@@ -1,34 +1,45 @@
-import { DuckApi, DuckImage, DuckResponse } from 'duck-node';
+import { DuckImage, DuckResponse } from 'duck-node';
 import { InlineQueryResultGif, InlineQueryResultPhoto } from 'typegram';
-import { v4 as uuid } from 'uuid';
 import path = require('path');
 import { SessionEntity } from '@modules/storage';
 import { AxiosError } from 'axios';
 import { Injectable } from '@nestjs/common';
+import { DuckApiFactory } from '@modules/bot/services/duck-api-factory.service';
+import { Chance } from 'chance';
 
 type JpegGifQueryResult = InlineQueryResultPhoto | InlineQueryResultGif;
 const allowedExt = ['.jpeg', '.jpg', '.gif'];
 
 @Injectable()
 export class ImagesService {
-  constructor(private _duckApi: DuckApi) {}
+  private readonly _chance = new Chance();
 
-  getImages(query: string, session: SessionEntity): Promise<DuckResponse<DuckImage>> | DuckResponse<DuckImage> {
+  constructor(private _duckApiFactory: DuckApiFactory) {}
+
+  getImages(query: string, session: SessionEntity): Promise<DuckResponse<DuckImage>> {
     if (session.query === query && session.vqd && session.next) {
-      return this._duckApi
+      return this._duckApiFactory
+        .create()
         .next<DuckImage>(session.next, session.vqd)
         .then((res) => res.data)
         .catch(this.handle403);
     }
 
     if (session.query !== query) {
-      return this._duckApi
+      return this._duckApiFactory
+        .create()
         .getImages(query, session.strict)
         .then((res) => res.data)
         .catch(this.handle403);
     }
 
-    return <DuckResponse<DuckImage>>{};
+    return Promise.resolve({
+      vqd: null,
+      next: null,
+      results: [],
+      query: query,
+      queryEncoded: null,
+    });
   }
 
   mapToInlineQueryResults(source: DuckImage[]): JpegGifQueryResult[] {
@@ -48,14 +59,14 @@ export class ImagesService {
       case '.jpg':
         return {
           type: 'photo',
-          id: uuid(),
+          id: this._chance.guid(),
           photo_url: source.image,
           thumb_url: source.thumbnail,
         };
       case '.gif':
         return {
           type: 'gif',
-          id: uuid(),
+          id: this._chance.guid(),
           gif_url: source.image,
           thumb_url: source.thumbnail,
         };

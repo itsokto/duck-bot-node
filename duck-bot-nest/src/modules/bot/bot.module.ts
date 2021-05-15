@@ -1,9 +1,11 @@
 import { BotUpdate } from './bot.update';
 import { Module } from '@nestjs/common';
 import { ImagesService } from './services/images.service';
-import { DuckApi } from 'duck-node';
+import { DuckApiFactory } from './services/duck-api-factory.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  providers: [BotUpdate, ImagesService, DuckApi],
+  imports: [ConfigModule],
+  providers: [BotUpdate, ImagesService, DuckApiFactory],
 })
 export class BotModule {}

@@ -28,9 +28,10 @@
     "@nestjs/typeorm": "^7.1.5",
     "applicationinsights": "^2.0.0",
     "axios": "^0.21.1",
-    "bottleneck": "^2.19.5",
+    "chance": "^1.1.7",
     "class-transformer": "^0.4.0",
-    "duck-node": "^1.1.0",
+    "duck-node": "^1.1.4",
+    "https-proxy-agent": "^5.0.0",
     "nestjs-telegraf": "^2.2.2",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
@@ -38,13 +39,13 @@
     "rxjs": "^6.6.7",
     "telegraf": "^4.3.0",
     "telegraf-throttler": "^0.6.0",
-    "typeorm": "^0.2.32",
-    "uuid": "^8.3.2"
+    "typeorm": "^0.2.32"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
     "@nestjs/schematics": "^7.3.1",
     "@nestjs/testing": "^7.6.15",
+    "@types/chance": "^1.1.1",
     "@types/jest": "^26.0.23",
     "@types/node": "^14.14.45",
     "@types/sequelize": "^4.28.9",

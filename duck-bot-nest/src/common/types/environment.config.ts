@@ -11,4 +11,5 @@ export interface EnvironmentConfig {
   TELEGRAM_WEBHOOK_DOMAIN: string;
   DB_CONNECTION_STRING: string;
   PORT: number;
+  PROXY: string;
 }

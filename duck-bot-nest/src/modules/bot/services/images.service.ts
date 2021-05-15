@@ -37,7 +37,7 @@ export class ImagesService {
       vqd: null,
       next: null,
       results: [],
-      query: query,
+      query: null,
       queryEncoded: null,
     });
   }

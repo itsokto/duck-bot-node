@@ -6,7 +6,6 @@ import { Telegraf } from 'telegraf';
 import { TelegramSessionStorage } from '@modules/storage';
 import { BotModule } from '@modules/bot';
 import { telegrafSession } from '@middlewares/session.middleware';
-import { throttler } from '@middlewares/throttler.middleware';
 
 @Injectable()
 export class TelegrafConfigService implements TelegrafOptionsFactory {
@@ -28,7 +27,7 @@ export class TelegrafConfigService implements TelegrafOptionsFactory {
       token: this._configService.get<string>('TELEGRAM_TOKEN'),
       include: [BotModule],
       launchOptions: launchOptions,
-      middlewares: [throttler(env), telegrafSession({ store: this._storage })],
+      middlewares: [telegrafSession({ store: this._storage })],
     };
   }
 }

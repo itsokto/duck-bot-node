@@ -1,6 +1,5 @@
 # compiled output
 /dist
-/lib
 /node_modules
 
 # Logs
@@ -32,7 +31,6 @@ lerna-debug.log*
 
 # Yarn
 .yarn/*
-.yarnrc.yml
 !.yarn/releases
 
 # TypeORM

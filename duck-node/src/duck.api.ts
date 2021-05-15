@@ -6,8 +6,8 @@ export class DuckApi {
   private _client: AxiosInstance;
 
   constructor(axiosConfig?: AxiosRequestConfig) {
-    axiosConfig ??= {};
-    axiosConfig.baseURL ??= constants.baseURL;
+    axiosConfig = axiosConfig ?? {};
+    axiosConfig.baseURL = axiosConfig.baseURL ?? constants.baseURL;
     this._client = axios.create(axiosConfig);
   }
 

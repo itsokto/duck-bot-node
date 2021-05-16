@@ -12,8 +12,8 @@ export class DuckApiFactory {
   private _cache: Map<string, DuckApi> = new Map<string, DuckApi>();
 
   constructor(private readonly _configService: ConfigService<EnvironmentConfig>) {
-    const proxies = _configService.get<string>('PROXY')?.split(';');
-    this._proxies.push('', ...proxies);
+    const proxies = _configService.get<string>('PROXY', '').split(';');
+    this._proxies.push(...proxies);
   }
 
   create(): DuckApi {

@@ -6,10 +6,10 @@ export enum Environment {
 }
 
 export interface EnvironmentConfig {
-  NODE_ENV: Environment;
+  NODE_ENV?: Environment;
   TELEGRAM_TOKEN: string;
-  TELEGRAM_WEBHOOK_DOMAIN: string;
+  TELEGRAM_WEBHOOK_DOMAIN?: string;
   DB_CONNECTION_STRING: string;
-  PORT: number;
-  PROXY: string;
+  PORT?: number;
+  PROXY?: string;
 }

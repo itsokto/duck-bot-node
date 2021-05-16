@@ -911,56 +911,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api@npm:^0.18.1":
-  version: 0.18.1
-  resolution: "@opentelemetry/api@npm:0.18.1"
-  checksum: 1bcd46b052cabe657734c862435beefec54838f736cc9b0076937dd1bba526a5632e9488637ede1b545202f4158299818a7c9ceb0c49bfcd0742a48644ba5e1a
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/core@npm:0.19.0":
-  version: 0.19.0
-  resolution: "@opentelemetry/core@npm:0.19.0"
-  dependencies:
-    semver: ^7.1.3
-  peerDependencies:
-    "@opentelemetry/api": ^1.0.0-rc.0
-  checksum: 0867da8e3c03cee93cf06b97d44ae612a7f200f49dea4ab92af5391eddcf040e000ada8cabc35b3cb860ce1e3c8586c706b66e819abdc9e76834b308bfc8700c
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/resources@npm:0.19.0":
-  version: 0.19.0
-  resolution: "@opentelemetry/resources@npm:0.19.0"
-  dependencies:
-    "@opentelemetry/core": 0.19.0
-  peerDependencies:
-    "@opentelemetry/api": ^1.0.0-rc.0
-  checksum: 4e1fdc2e2ad01ad60c677ad99d8cf6f3f1729553d3f12743b97aeceafec39c95ab892925b292472decc17fcfdfe5492a35edd33884e4f39ae543466ccd25f222
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/semantic-conventions@npm:0.19.0":
-  version: 0.19.0
-  resolution: "@opentelemetry/semantic-conventions@npm:0.19.0"
-  checksum: cdc16ea5e0fc5312c10cc763f402911d9eeaf809df04b277085ecc54231d70d530ecf0fc4f93651ed4afcb78f2e5f15ad8fc605fd3de290802d8e404dfc0221d
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/tracing@npm:^0.19.0":
-  version: 0.19.0
-  resolution: "@opentelemetry/tracing@npm:0.19.0"
-  dependencies:
-    "@opentelemetry/core": 0.19.0
-    "@opentelemetry/resources": 0.19.0
-    "@opentelemetry/semantic-conventions": 0.19.0
-    lodash.merge: ^4.6.2
-  peerDependencies:
-    "@opentelemetry/api": ^1.0.0-rc.0
-  checksum: 9de45916226eca217ebbcb56089ca659ab0300d16a93a17dda4d0513b7149bbf9d34b901ee4ca75aee400b70e60e9ae9318d465c5a3c2e3f61e5438382db4fa4
-  languageName: node
-  linkType: hard
-
 "@schematics/schematics@npm:0.1102.6":
   version: 0.1102.6
   resolution: "@schematics/schematics@npm:0.1102.6"
@@ -1767,17 +1717,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"applicationinsights@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "applicationinsights@npm:2.0.0"
+"applicationinsights@npm:1.8.10":
+  version: 1.8.10
+  resolution: "applicationinsights@npm:1.8.10"
   dependencies:
-    "@opentelemetry/api": ^0.18.1
-    "@opentelemetry/tracing": ^0.19.0
     cls-hooked: ^4.2.2
     continuation-local-storage: ^3.2.1
-    diagnostic-channel: 1.0.0
-    diagnostic-channel-publishers: 1.0.0
-  checksum: 348bab1fc2b869773ca2a6853044e9b38d2eb67deba5665e63033af555af65b13427a1b3ec00ab37d3c5cb38363344d75cb3a42d38f4eccec194f03b21a9753f
+    diagnostic-channel: 0.3.1
+    diagnostic-channel-publishers: 0.4.4
+  checksum: 2a7a22fa31828feb4741427c0a30e932bbf1c85c46c6f0d1251be2bf52e48cd975b0c48eb0dce8a88a6b8f06b371a126b6c783ac2171032c16ac6267e158e2fe
   languageName: node
   linkType: hard
 
@@ -2929,21 +2877,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"diagnostic-channel-publishers@npm:1.0.0":
-  version: 1.0.0
-  resolution: "diagnostic-channel-publishers@npm:1.0.0"
+"diagnostic-channel-publishers@npm:0.4.4":
+  version: 0.4.4
+  resolution: "diagnostic-channel-publishers@npm:0.4.4"
   peerDependencies:
     diagnostic-channel: "*"
-  checksum: aeb36d57ab0b2d2e5c3fd1c08230e9f5f624e078166484fb9e0ee04e1b47ba7558f51d3978fab26bb7a90d435d69a362d1b14e7ea72a711d13ea5342f9101c02
+  checksum: ff8a7a3072e87cd107c91a78d1c9024592181e3f21f4742c043066128eaf724692b4cec0386d396478d99d6ed5cd493e29fae7311852a9c73d199f4d22dd515f
   languageName: node
   linkType: hard
 
-"diagnostic-channel@npm:1.0.0":
-  version: 1.0.0
-  resolution: "diagnostic-channel@npm:1.0.0"
+"diagnostic-channel@npm:0.3.1":
+  version: 0.3.1
+  resolution: "diagnostic-channel@npm:0.3.1"
   dependencies:
     semver: ^5.3.0
-  checksum: f83b67a386dea8836e5e86aa1057612ce4622f84ac2c407e9209cbb87210f4be4147e5dd1949471baef450005b1af3eac49fce9cd82de2b97aceb835c53c08f2
+  checksum: ef5d24370f6d406f5bb0fa9d3c7d173c1aaf7aaad27658ca350dcc36be46d36aef9815921ebb3172474e7d97299d2c850647449627666531f93400b0379cf886
   languageName: node
   linkType: hard
 
@@ -3020,7 +2968,7 @@ __metadata:
     "@types/supertest": ^2.0.11
     "@typescript-eslint/eslint-plugin": ^4.23.0
     "@typescript-eslint/parser": ^4.23.0
-    applicationinsights: ^2.0.0
+    applicationinsights: 1.8.10
     axios: ^0.21.1
     chance: ^1.1.7
     class-transformer: ^0.4.0
@@ -5411,13 +5359,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.merge@npm:^4.6.2":
-  version: 4.6.2
-  resolution: "lodash.merge@npm:4.6.2"
-  checksum: 4e2bb42a87a148991458d7c384bc197e96f7115e9536fc8e2c86ae9e99ce1c1f693ff15eb85761952535f48d72253aed8e673d9f32dde3e671cd91e3fde220a7
-  languageName: node
-  linkType: hard
-
 "lodash.set@npm:4.3.2":
   version: 4.3.2
   resolution: "lodash.set@npm:4.3.2"
@@ -7061,7 +7002,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.x, semver@npm:^7.1.3, semver@npm:^7.2.1, semver@npm:^7.3.2, semver@npm:^7.3.4, semver@npm:^7.3.5":
+"semver@npm:7.x, semver@npm:^7.2.1, semver@npm:^7.3.2, semver@npm:^7.3.4, semver@npm:^7.3.5":
   version: 7.3.5
   resolution: "semver@npm:7.3.5"
   dependencies:

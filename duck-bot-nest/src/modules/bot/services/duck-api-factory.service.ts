@@ -3,7 +3,7 @@ import { DuckApi } from 'duck-node';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentConfig } from '@common/types/environment.config';
 import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
-import { Chance } from 'chance';
+import Chance from 'chance';
 
 @Injectable()
 export class DuckApiFactory {

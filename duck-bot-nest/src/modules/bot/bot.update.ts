@@ -1,7 +1,7 @@
 import { Command, Help, On, Start, Update } from 'nestjs-telegraf';
 import { SessionContext } from 'telegraf/typings/session';
 import { SessionEntity } from '../storage';
-import { CallbackQuery, InlineKeyboardButton, InlineQueryResult } from 'typegram';
+import { CallbackQuery, InlineKeyboardButton } from 'typegram';
 import { DuckImage, DuckResponse, DuckStrict } from 'duck-node';
 import { ImagesService } from './services/images.service';
 import { CallbackData, CallBackDataType } from '@modules/bot/types/callback.data';
@@ -44,9 +44,8 @@ export class BotUpdate {
 
   @On('callback_query')
   async callbackQuery(ctx: SessionContext<SessionEntity>) {
-    const { callbackQuery } = ctx;
-    const { data: callbackData } = callbackQuery as DataCallbackQuery;
-    const { type, data } = deserialize(CallbackData, callbackData) as { type: CallBackDataType; data: DuckStrict };
+    const callbackQuery = ctx.callbackQuery as DataCallbackQuery;
+    const { type, data } = deserialize(CallbackData, callbackQuery.data);
 
     if (type === CallBackDataType.StrictCommand && ctx.session.strict !== data) {
       ctx.session.strict = data;
@@ -72,9 +71,7 @@ export class BotUpdate {
       return;
     }
 
-    const inlineQueryResults: readonly InlineQueryResult[] = this._imageService.mapToInlineQueryResults(
-      response.results,
-    );
+    const inlineQueryResults = this._imageService.mapToInlineQueryResults(response.results);
 
     const nextOffset = response.next ? this.getNextOffset(inlineQuery.offset, inlineQueryResults.length) : '';
 
@@ -105,9 +102,9 @@ function* generateKeyboard(defaultValue?: DuckStrict): Generator<InlineKeyboardB
   const keys = Object.entries(DuckStrict).filter(([, value]) => typeof value === 'number');
 
   for (const [key, value] of keys) {
-    const data: CallbackData = {
+    const data: CallbackData<DuckStrict> = {
       type: CallBackDataType.StrictCommand,
-      data: value,
+      data: value as DuckStrict,
     };
 
     yield {

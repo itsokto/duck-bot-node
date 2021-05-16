@@ -2,10 +2,10 @@ import { DuckImage, DuckResponse } from 'duck-node';
 import { InlineQueryResultGif, InlineQueryResultPhoto } from 'typegram';
 import path = require('path');
 import { SessionEntity } from '@modules/storage';
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { Injectable } from '@nestjs/common';
 import { DuckApiFactory } from '@modules/bot/services/duck-api-factory.service';
-import { Chance } from 'chance';
+import Chance from 'chance';
 
 type JpegGifQueryResult = InlineQueryResultPhoto | InlineQueryResultGif;
 const allowedExt = ['.jpeg', '.jpg', '.gif'];
@@ -21,7 +21,7 @@ export class ImagesService {
       return this._duckApiFactory
         .create()
         .next<DuckImage>(session.next, session.vqd)
-        .then((res) => res.data)
+        .then((res) => this.handleResponse(res, query))
         .catch(this.handle403);
     }
 
@@ -29,7 +29,7 @@ export class ImagesService {
       return this._duckApiFactory
         .create()
         .getImages(query, session.strict)
-        .then((res) => res.data)
+        .then((res) => this.handleResponse(res, query))
         .catch(this.handle403);
     }
 
@@ -73,6 +73,11 @@ export class ImagesService {
       default:
         return null;
     }
+  }
+
+  private handleResponse(response: AxiosResponse<DuckResponse<DuckImage>>, query: string): DuckResponse<DuckImage> {
+    response.data.query = query;
+    return response.data;
   }
 
   private handle403(err: AxiosError<DuckResponse<DuckImage>>): DuckResponse<DuckImage> {

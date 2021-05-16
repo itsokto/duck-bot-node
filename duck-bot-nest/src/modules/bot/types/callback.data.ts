@@ -2,7 +2,7 @@ export enum CallBackDataType {
   StrictCommand = 'strict_command',
 }
 
-export class CallbackData {
+export class CallbackData<T> {
   type: CallBackDataType;
-  data: any;
+  data: T;
 }

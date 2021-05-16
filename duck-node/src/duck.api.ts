@@ -8,10 +8,18 @@ export class DuckApi {
   constructor(axiosConfig?: AxiosRequestConfig) {
     axiosConfig = axiosConfig ?? {};
     axiosConfig.baseURL = axiosConfig.baseURL ?? constants.baseURL;
+
     this._client = axios.create(axiosConfig);
+
+    this._client.interceptors.response.use((response) => {
+      if (response.data instanceof Object && response.data.query) {
+        response.data.query = Buffer.from(response.data.query, 'latin1').toString();
+      }
+      return response;
+    });
   }
 
-  async getToken(query: string): Promise<String> {
+  async getToken(query: string): Promise<string> {
     const page = await this._client
       .get<string>('', {
         params: { q: query },

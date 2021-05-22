@@ -2,14 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { DuckApi } from 'duck-node';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentConfig } from '@common/types/environment.config';
+import { AxiosRequestConfig } from 'axios';
 import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
 import Chance from 'chance';
+import UserAgent from 'user-agents';
 
 @Injectable()
 export class DuckApiFactory {
   private readonly _chance = new Chance();
+  private readonly _userAgents = new UserAgent();
   private readonly _proxies: string[] = [];
-  private _cache: Map<string, DuckApi> = new Map<string, DuckApi>();
+  private _proxiesCache: Map<string, HttpsProxyAgent> = new Map<string, HttpsProxyAgent>();
 
   constructor(private readonly _configService: ConfigService<EnvironmentConfig>) {
     const proxies = _configService.get<string>('PROXY', '').split(';');
@@ -22,17 +25,23 @@ export class DuckApiFactory {
   }
 
   private cacheGetOrCreate(proxy: string): DuckApi {
-    let duckApi = this._cache.get(proxy);
-    if (duckApi) {
-      return duckApi;
+    const httpsProxyAgent = this._proxiesCache.get(proxy);
+    let axiosConfig: AxiosRequestConfig = {};
+
+    if (httpsProxyAgent) {
+      axiosConfig = { ...axiosConfig, httpsAgent: httpsProxyAgent };
+    }
+    if (!httpsProxyAgent && proxy) {
+      axiosConfig = { ...axiosConfig, httpsAgent: new HttpsProxyAgent(proxy) };
     }
 
-    const axiosConfig = proxy === '' ? {} : { httpsAgent: new HttpsProxyAgent(proxy) };
-    duckApi = new DuckApi(axiosConfig);
+    const api = new DuckApi((defaultConfig) => {
+      return { ...defaultConfig, ...axiosConfig, headers: { 'User-Agent': this._userAgents.random().toString() } };
+    });
 
-    this._cache.set(proxy, duckApi);
+    this._proxiesCache.set(proxy, httpsProxyAgent);
 
-    return duckApi;
+    return api;
   }
 
   private getRandomProxy(): string {

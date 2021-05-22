@@ -1,4 +1,4 @@
-import { DuckImage, DuckResponse } from 'duck-node';
+import { DuckApi, DuckImage, DuckResponse } from 'duck-node';
 import { InlineQueryResultGif, InlineQueryResultPhoto } from 'typegram';
 import path = require('path');
 import { SessionEntity } from '@modules/storage';
@@ -13,21 +13,22 @@ const allowedExt = ['.jpeg', '.jpg', '.gif'];
 @Injectable()
 export class ImagesService {
   private readonly _chance = new Chance();
+  private readonly _duckApi: DuckApi;
 
-  constructor(private _duckApiFactory: DuckApiFactory) {}
+  constructor(_duckApiFactory: DuckApiFactory) {
+    this._duckApi = _duckApiFactory.create();
+  }
 
   getImages(query: string, session: SessionEntity): Promise<DuckResponse<DuckImage>> {
     if (session.query === query && session.vqd && session.next) {
-      return this._duckApiFactory
-        .create()
+      return this._duckApi
         .next<DuckImage>(session.next, session.vqd)
         .then((res) => this.handleResponse(res, query))
         .catch(this.handle403);
     }
 
     if (session.query !== query) {
-      return this._duckApiFactory
-        .create()
+      return this._duckApi
         .getImages(query, session.strict)
         .then((res) => this.handleResponse(res, query))
         .catch(this.handle403);
@@ -77,6 +78,7 @@ export class ImagesService {
 
   private handleResponse(response: AxiosResponse<DuckResponse<DuckImage>>, query: string): DuckResponse<DuckImage> {
     response.data.query = query;
+    response.data.results = response.data.results.filter((_, i) => i < 50);
     return response.data;
   }
 

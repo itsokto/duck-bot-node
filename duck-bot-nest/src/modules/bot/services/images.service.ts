@@ -88,7 +88,7 @@ export class ImagesService {
     }
 
     if (err.response?.status === 418) {
-      console.warn('Provided config throws strange error:', err.config);
+      console.warn('Provided config results strange error:', err.config);
       return err.response?.data;
     }
     throw err;

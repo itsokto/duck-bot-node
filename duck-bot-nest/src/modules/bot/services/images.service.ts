@@ -24,14 +24,14 @@ export class ImagesService {
       return this._duckApi
         .next<DuckImage>(session.next, session.vqd)
         .then((res) => this.handleResponse(res, query))
-        .catch(this.handle403);
+        .catch(this.handleError);
     }
 
     if (session.query !== query) {
       return this._duckApi
         .getImages(query, session.strict)
         .then((res) => this.handleResponse(res, query))
-        .catch(this.handle403);
+        .catch(this.handleError);
     }
 
     return Promise.resolve({
@@ -82,7 +82,7 @@ export class ImagesService {
     return response.data;
   }
 
-  private handle403(err: AxiosError<DuckResponse<DuckImage>>): DuckResponse<DuckImage> {
+  private handleError(err: AxiosError<DuckResponse<DuckImage>>): DuckResponse<DuckImage> {
     if (err.response?.status === 403) {
       return err.response?.data;
     }

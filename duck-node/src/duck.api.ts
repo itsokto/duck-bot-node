@@ -2,14 +2,18 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { DuckImage, DuckResponse, DuckStrict } from './models';
 import constants from './constants';
 
+const defaultFactory = (requestConfig: AxiosRequestConfig): AxiosRequestConfig => {
+  return requestConfig;
+};
+
 export class DuckApi {
   private _client: AxiosInstance;
 
-  constructor(axiosConfig?: AxiosRequestConfig) {
-    axiosConfig = axiosConfig ?? {};
-    axiosConfig.baseURL = axiosConfig.baseURL ?? constants.baseURL;
-
-    this._client = axios.create(axiosConfig);
+  constructor(
+    private readonly configFactory: (requestConfig: AxiosRequestConfig) => AxiosRequestConfig = defaultFactory,
+  ) {
+    this._client = axios.create();
+    this._client.defaults.baseURL = constants.baseURL;
 
     this._client.interceptors.response.use((response) => {
       if (response.data instanceof Object && response.data.query) {
@@ -21,13 +25,11 @@ export class DuckApi {
 
   async getToken(query: string): Promise<string> {
     const page = await this._client
-      .get<string>('', {
-        params: { q: query },
-      })
+      .get<string>('', this.configFactory({ params: { q: query } }))
       .then((res) => res.data);
 
     const math = constants.vqdRegex.exec(page);
-    if (math && math.groups) {
+    if (math?.groups) {
       return math.groups['vqd'];
     }
 
@@ -36,14 +38,13 @@ export class DuckApi {
 
   async getImages(query: string, strict: DuckStrict = DuckStrict.Off): Promise<AxiosResponse<DuckResponse<DuckImage>>> {
     const vqd = await this.getToken(query);
-    return this._client.get<DuckResponse<DuckImage>>('i.js', {
-      params: { q: query, p: strict, vqd, o: 'json', f: ',,,', l: 'us-en' },
-    });
+    return this._client.get<DuckResponse<DuckImage>>(
+      'i.js',
+      this.configFactory({ params: { q: query, p: strict, vqd, o: 'json', f: ',,,', l: 'us-en' } }),
+    );
   }
 
   next<T>(next: string, vqd: string): Promise<AxiosResponse<DuckResponse<T>>> {
-    return this._client.get<DuckResponse<T>>(next, {
-      params: { vqd },
-    });
+    return this._client.get<DuckResponse<T>>(next, this.configFactory({ params: { vqd } }));
   }
 }

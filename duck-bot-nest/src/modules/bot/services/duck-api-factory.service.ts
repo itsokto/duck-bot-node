@@ -10,7 +10,9 @@ import UserAgent from 'user-agents';
 @Injectable()
 export class DuckApiFactory {
   private readonly _chance = new Chance();
-  private readonly _userAgents = new UserAgent((data) => !data.userAgent.includes('Safari'));
+  private readonly _userAgents = new UserAgent(
+    (data) => !data.userAgent.includes('Safari') || !data.userAgent.includes('Mac'),
+  );
   private readonly _proxies: string[] = [];
   private _proxiesCache: Map<string, HttpsProxyAgent> = new Map<string, HttpsProxyAgent>();
 

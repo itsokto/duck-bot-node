@@ -22,24 +22,36 @@ export class DuckApiFactory {
   }
 
   create(): DuckApi {
-    const proxy = this.getRandomProxy();
-    return this.cacheGetOrCreate(proxy);
+    return new DuckApi(this.configFactory());
   }
 
-  private cacheGetOrCreate(proxy: string): DuckApi {
-    const httpsProxyAgent = this._proxiesCache.get(proxy);
-    let axiosConfig: AxiosRequestConfig = { timeout: 5000 };
+  private configFactory(): (defaultConfig: AxiosRequestConfig) => AxiosRequestConfig {
+    return (defaultConfig: AxiosRequestConfig): AxiosRequestConfig => {
+      this.setProxy(defaultConfig);
+      this.setHeaders(defaultConfig);
 
-    if (httpsProxyAgent) {
-      axiosConfig.httpsAgent = httpsProxyAgent;
+      return defaultConfig;
+    };
+  }
+
+  private setProxy(axiosRequest: AxiosRequestConfig): void {
+    axiosRequest.timeout = 5000;
+    const proxy = this.getRandomProxy();
+
+    if (!proxy) {
+      return;
     }
 
-    if (!httpsProxyAgent && proxy) {
-      axiosConfig.httpsAgent = new HttpsProxyAgent(proxy);
-      this._proxiesCache.set(proxy, httpsProxyAgent);
+    let cachedHttpsProxyAgent = this._proxiesCache.get(proxy);
+
+    if (cachedHttpsProxyAgent) {
+      axiosRequest.httpsAgent = cachedHttpsProxyAgent;
+      return;
     }
 
-    return new DuckApi(this.configFactory(axiosConfig));
+    cachedHttpsProxyAgent = new HttpsProxyAgent(proxy);
+    axiosRequest.httpsAgent = cachedHttpsProxyAgent;
+    this._proxiesCache.set(proxy, cachedHttpsProxyAgent);
   }
 
   private getRandomProxy(): string {
@@ -48,30 +60,25 @@ export class DuckApiFactory {
     }
 
     const index = this._chance.natural({ max: this._proxies.length - 1 });
+
     return this._proxies[index];
   }
 
-  private configFactory(config: AxiosRequestConfig): (defaultConfig: AxiosRequestConfig) => AxiosRequestConfig {
-    return (defaultConfig: AxiosRequestConfig): AxiosRequestConfig => {
-      const defaultHeaders = { 'user-agent': this._userAgents.random().toString() };
-      const postHeaders = {
-        ...defaultHeaders,
-        authority: 'duckduckgo.com',
-        accept: 'application/json, text/javascript, */*; q=0.01',
-        'sec-fetch-dest': 'empty',
-        'x-requested-with': 'XMLHttpRequest',
-        'sec-fetch-site': 'same-origin',
-        'sec-fetch-mode': 'cors',
-        referer: 'https://duckduckgo.com/',
-        'accept-language': 'en-US,en;q=0.9',
-      };
-      const headers = defaultConfig.method === 'post' ? postHeaders : defaultHeaders;
+  private setHeaders(axiosRequest: AxiosRequestConfig): void {
+    const defaultHeaders = { 'user-agent': this._userAgents.random().toString() };
 
-      return {
-        ...defaultConfig,
-        ...config,
-        headers: headers,
-      };
+    const postHeaders = {
+      ...defaultHeaders,
+      authority: 'duckduckgo.com',
+      accept: 'application/json, text/javascript, */*; q=0.01',
+      'sec-fetch-dest': 'empty',
+      'x-requested-with': 'XMLHttpRequest',
+      'sec-fetch-site': 'same-origin',
+      'sec-fetch-mode': 'cors',
+      referer: 'https://duckduckgo.com/',
+      'accept-language': 'en-US,en;q=0.9',
     };
+
+    axiosRequest.headers = axiosRequest.method === 'post' ? postHeaders : defaultHeaders;
   }
 }

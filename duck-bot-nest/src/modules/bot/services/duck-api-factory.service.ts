@@ -28,7 +28,7 @@ export class DuckApiFactory {
 
   private cacheGetOrCreate(proxy: string): DuckApi {
     const httpsProxyAgent = this._proxiesCache.get(proxy);
-    let axiosConfig: AxiosRequestConfig = {};
+    let axiosConfig: AxiosRequestConfig = { timeout: 5000 };
 
     if (httpsProxyAgent) {
       axiosConfig = { ...axiosConfig, httpsAgent: httpsProxyAgent };
@@ -38,7 +38,25 @@ export class DuckApiFactory {
     }
 
     const api = new DuckApi((defaultConfig) => {
-      return { ...defaultConfig, ...axiosConfig, headers: { 'User-Agent': this._userAgents.random().toString() } };
+      const defaultHeaders = { 'user-agent': this._userAgents.random().toString() };
+      const postHeaders = {
+        ...defaultHeaders,
+        authority: 'duckduckgo.com',
+        accept: 'application/json, text/javascript, */*; q=0.01',
+        'sec-fetch-dest': 'empty',
+        'x-requested-with': 'XMLHttpRequest',
+        'sec-fetch-site': 'same-origin',
+        'sec-fetch-mode': 'cors',
+        referer: 'https://duckduckgo.com/',
+        'accept-language': 'en-US,en;q=0.9',
+      };
+      const headers = defaultConfig.method === 'post' ? postHeaders : defaultHeaders;
+
+      return {
+        ...defaultConfig,
+        ...axiosConfig,
+        headers: headers,
+      };
     });
 
     this._proxiesCache.set(proxy, httpsProxyAgent);

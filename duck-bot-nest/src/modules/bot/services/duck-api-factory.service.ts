@@ -35,7 +35,7 @@ export class DuckApiFactory {
   }
 
   private setProxy(axiosRequest: AxiosRequestConfig): void {
-    axiosRequest.timeout = 5000;
+    axiosRequest.timeout = 10000;
     const proxy = this.getRandomProxy();
 
     if (!proxy) {
@@ -67,18 +67,6 @@ export class DuckApiFactory {
   private setHeaders(axiosRequest: AxiosRequestConfig): void {
     const defaultHeaders = { 'user-agent': this._userAgents.random().toString() };
 
-    const postHeaders = {
-      ...defaultHeaders,
-      authority: 'duckduckgo.com',
-      accept: 'application/json, text/javascript, */*; q=0.01',
-      'sec-fetch-dest': 'empty',
-      'x-requested-with': 'XMLHttpRequest',
-      'sec-fetch-site': 'same-origin',
-      'sec-fetch-mode': 'cors',
-      referer: 'https://duckduckgo.com/',
-      'accept-language': 'en-US,en;q=0.9',
-    };
-
-    axiosRequest.headers = axiosRequest.method === 'post' ? postHeaders : defaultHeaders;
+    axiosRequest.headers = { ...axiosRequest.headers, ...defaultHeaders };
   }
 }

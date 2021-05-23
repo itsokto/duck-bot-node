@@ -3,7 +3,7 @@ import { DuckApi } from 'duck-node';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentConfig } from '@common/types/environment.config';
 import { AxiosRequestConfig } from 'axios';
-import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import Chance from 'chance';
 import UserAgent from 'user-agents';
 
@@ -31,13 +31,28 @@ export class DuckApiFactory {
     let axiosConfig: AxiosRequestConfig = { timeout: 5000 };
 
     if (httpsProxyAgent) {
-      axiosConfig = { ...axiosConfig, httpsAgent: httpsProxyAgent };
-    }
-    if (!httpsProxyAgent && proxy) {
-      axiosConfig = { ...axiosConfig, httpsAgent: new HttpsProxyAgent(proxy) };
+      axiosConfig.httpsAgent = httpsProxyAgent;
     }
 
-    const api = new DuckApi((defaultConfig) => {
+    if (!httpsProxyAgent && proxy) {
+      axiosConfig.httpsAgent = new HttpsProxyAgent(proxy);
+      this._proxiesCache.set(proxy, httpsProxyAgent);
+    }
+
+    return new DuckApi(this.configFactory(axiosConfig));
+  }
+
+  private getRandomProxy(): string {
+    if (this._proxies.length === 0) {
+      return '';
+    }
+
+    const index = this._chance.natural({ max: this._proxies.length - 1 });
+    return this._proxies[index];
+  }
+
+  private configFactory(config: AxiosRequestConfig): (defaultConfig: AxiosRequestConfig) => AxiosRequestConfig {
+    return (defaultConfig: AxiosRequestConfig): AxiosRequestConfig => {
       const defaultHeaders = { 'user-agent': this._userAgents.random().toString() };
       const postHeaders = {
         ...defaultHeaders,
@@ -54,22 +69,9 @@ export class DuckApiFactory {
 
       return {
         ...defaultConfig,
-        ...axiosConfig,
+        ...config,
         headers: headers,
       };
-    });
-
-    this._proxiesCache.set(proxy, httpsProxyAgent);
-
-    return api;
-  }
-
-  private getRandomProxy(): string {
-    if (this._proxies.length === 0) {
-      return '';
-    }
-
-    const index = this._chance.natural({ max: this._proxies.length - 1 });
-    return this._proxies[index];
+    };
   }
 }

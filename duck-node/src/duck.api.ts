@@ -16,7 +16,7 @@ export class DuckApi {
     this._client.defaults.baseURL = constants.baseURL;
 
     this._client.interceptors.request.use((request) => {
-      if (request.method === 'post') {
+      if (request.url) {
         request.headers = {
           ...request.headers,
           authority: 'duckduckgo.com',

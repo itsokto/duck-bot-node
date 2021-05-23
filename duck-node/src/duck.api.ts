@@ -16,6 +16,20 @@ export class DuckApi {
     this._client.defaults.baseURL = constants.baseURL;
 
     this._client.interceptors.request.use((request) => {
+      if (request.method === 'post') {
+        request.headers = {
+          ...request.headers,
+          authority: 'duckduckgo.com',
+          accept: 'application/json, text/javascript, */*; q=0.01',
+          'sec-fetch-dest': 'empty',
+          'x-requested-with': 'XMLHttpRequest',
+          'sec-fetch-site': 'same-origin',
+          'sec-fetch-mode': 'cors',
+          referer: 'https://duckduckgo.com/',
+          'accept-language': 'en-US,en;q=0.9',
+        };
+      }
+
       return this.configFactory(request);
     });
   }

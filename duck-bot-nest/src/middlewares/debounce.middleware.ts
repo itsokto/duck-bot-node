@@ -22,7 +22,7 @@ export function telegrafDebounce<TSession extends Record<string, unknown>>(
 
     // ensure debounce on latest update
     if (!canModify(key, update_id)) {
-      console.log(key, 'received old update', update_id);
+      console.log('[Debounce Middleware]', key, 'received old update', update_id);
       return;
     }
 
@@ -43,13 +43,11 @@ function canModify(key: string, update_id: number): boolean {
 
 function createCallback(key: string, update_id: number, fn: () => Promise<void>, debounceTime: number): void {
   const timeOut = setTimeout(async () => {
-    console.log(key, 'debounce');
     await fn();
     deleteCallback(key);
   }, debounceTime);
 
   callbacks.set(key, { update_id: update_id, timeout: timeOut });
-  console.log(key, 'created');
 }
 
 function deleteCallback(key: string): void {
@@ -60,5 +58,4 @@ function deleteCallback(key: string): void {
 
   clearTimeout(debounceCallback.timeout);
   callbacks.delete(key);
-  console.log(key, 'deleted');
 }

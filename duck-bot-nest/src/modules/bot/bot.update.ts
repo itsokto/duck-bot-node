@@ -37,7 +37,7 @@ export class BotUpdate {
   async strictCommand(ctx: SessionContext<SessionEntity>) {
     await ctx.reply('Select strict filter:', {
       reply_markup: {
-        inline_keyboard: [[...generateKeyboard(ctx.session.strict)]],
+        inline_keyboard: [[...generateKeyboard(ctx.session?.strict)]],
       },
     });
   }
@@ -58,12 +58,17 @@ export class BotUpdate {
 
   @On('callback_query')
   async callbackQuery(ctx: SessionContext<SessionEntity>) {
-    const callbackQuery = ctx.callbackQuery as DataCallbackQuery;
-    const { type, data } = deserialize(CallbackData, callbackQuery.data);
+    const { callbackQuery, session } = ctx;
 
-    if (type === CallBackDataType.StrictCommand && ctx.session.strict !== data) {
-      ctx.session.strict = data;
-      await ctx.editMessageReplyMarkup({ inline_keyboard: [[...generateKeyboard(ctx.session.strict)]] });
+    if (!session) {
+      return;
+    }
+
+    const { type, data } = deserialize(CallbackData, (callbackQuery as DataCallbackQuery)?.data);
+
+    if (type === CallBackDataType.StrictCommand && session.strict !== data) {
+      session.strict = data;
+      await ctx.editMessageReplyMarkup({ inline_keyboard: [[...generateKeyboard(session.strict)]] });
     }
 
     await ctx.answerCbQuery();
@@ -73,7 +78,7 @@ export class BotUpdate {
   async inlineQuery(ctx: SessionContext<SessionEntity>) {
     const { inlineQuery, session } = ctx;
 
-    if (!inlineQuery.query) {
+    if (!inlineQuery?.query || !session) {
       await ctx.answerInlineQuery([]);
       return;
     }

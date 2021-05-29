@@ -35,11 +35,11 @@ export class ImagesService {
     }
 
     return Promise.resolve({
-      vqd: null,
-      next: null,
+      vqd: {},
+      next: '',
       results: [],
-      query: null,
-      queryEncoded: null,
+      query: '',
+      queryEncoded: '',
     });
   }
 
@@ -54,7 +54,7 @@ export class ImagesService {
     });
   }
 
-  private mapToInlineQueryResult(source: DuckImage, ext: string): JpegGifQueryResult {
+  private mapToInlineQueryResult(source: DuckImage, ext: string): JpegGifQueryResult | undefined {
     switch (ext) {
       case '.jpeg':
       case '.jpg':
@@ -72,7 +72,7 @@ export class ImagesService {
           thumb_url: source.thumbnail,
         };
       default:
-        return null;
+        return undefined;
     }
   }
 

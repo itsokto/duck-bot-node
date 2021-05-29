@@ -25,7 +25,7 @@ export class TelegrafConfigService implements TelegrafOptionsFactory {
     const launchOptions: Telegraf.LaunchOptions = env === Environment.Production ? prodLaunchOptions : devLaunchOptions;
 
     return {
-      token: this._configService.get<string>('TELEGRAM_TOKEN'),
+      token: this._configService.get<string>('TELEGRAM_TOKEN', ''),
       include: [BotModule],
       launchOptions: launchOptions,
       middlewares: [telegrafDebounce(1500, 'inline_query'), telegrafSession({ store: this._storage })],

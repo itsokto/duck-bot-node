@@ -9,7 +9,7 @@ const omitKeys = [key, '__scenes'];
 export class TypeOrmStorage<T extends Pick<T, KeyColumn>> implements SessionStore<T> {
   constructor(private _repository: Repository<T>) {}
 
-  get(name: string): Promise<T> {
+  get(name: string): Promise<T | undefined> {
     return this._repository.findOne(name);
   }
 
@@ -18,7 +18,7 @@ export class TypeOrmStorage<T extends Pick<T, KeyColumn>> implements SessionStor
       value.key = name;
     }
 
-    const keys = Object.keys(value).filter((key) => !!value[key] && !omitKeys.includes(key));
+    const keys = Object.entries(value).flatMap(([key, value]) => (value && !omitKeys.includes(key) ? [key] : []));
 
     return this._repository
       .createQueryBuilder()
@@ -36,7 +36,7 @@ export class TypeOrmStorage<T extends Pick<T, KeyColumn>> implements SessionStor
   }
 }
 
-async function getSessionKey(ctx: Context): Promise<string> {
+async function getSessionKey(ctx: Context): Promise<string | undefined> {
   const fromId = ctx.from?.id;
   const chatId = ctx.chat?.id;
 
@@ -63,6 +63,7 @@ type SessionOptions<S> = {
 export function telegrafSession<S extends Record<string, any>>(
   options?: SessionOptions<S>,
 ): MiddlewareFn<SessionContext<S>> {
+  options ??= {};
   options.getSessionKey ??= getSessionKey;
 
   return session(options);

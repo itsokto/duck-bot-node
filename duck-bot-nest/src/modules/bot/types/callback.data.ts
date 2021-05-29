@@ -3,6 +3,6 @@ export enum CallBackDataType {
 }
 
 export class CallbackData<T> {
-  type: CallBackDataType;
-  data: T;
+  type: CallBackDataType | undefined;
+  data: T | undefined;
 }

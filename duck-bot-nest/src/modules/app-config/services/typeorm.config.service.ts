@@ -14,7 +14,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
     return {
       type: 'postgres',
-      url: this._configService.get<string>('DB_CONNECTION_STRING'),
+      url: this._configService.get<string>('DATABASE_URL'),
       entities: [SessionEntity],
       ssl: { rejectUnauthorized: false },
       synchronize: false,

@@ -42,6 +42,20 @@ export class BotUpdate {
     });
   }
 
+  @Command('donate')
+  async donateCommand(ctx: SessionContext<SessionEntity>) {
+    await ctx.reply('You can support me by following any of the links below. Thank you!', {
+      reply_markup: {
+        inline_keyboard: [
+          [
+            { text: '☕ Ko-fi', url: 'https://ko-fi.com/duckpicsbot' },
+            { text: '🟠 Patreon', url: 'https://patreon.com/duckpicsbot' },
+          ],
+        ],
+      },
+    });
+  }
+
   @On('callback_query')
   async callbackQuery(ctx: SessionContext<SessionEntity>) {
     const callbackQuery = ctx.callbackQuery as DataCallbackQuery;

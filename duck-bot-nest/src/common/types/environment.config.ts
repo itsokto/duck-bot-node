@@ -9,7 +9,7 @@ export interface EnvironmentConfig {
   NODE_ENV?: Environment;
   TELEGRAM_TOKEN: string;
   TELEGRAM_WEBHOOK_DOMAIN?: string;
-  DB_CONNECTION_STRING: string;
+  DATABASE_URL: string;
   PORT?: number;
   PROXY?: string;
 }

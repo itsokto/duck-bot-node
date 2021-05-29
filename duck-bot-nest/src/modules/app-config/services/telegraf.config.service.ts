@@ -6,6 +6,7 @@ import { Telegraf } from 'telegraf';
 import { TelegramSessionStorage } from '@modules/storage';
 import { BotModule } from '@modules/bot';
 import { telegrafSession } from '@middlewares/session.middleware';
+import { telegrafDebounce } from '@middlewares/debounce.middleware';
 
 @Injectable()
 export class TelegrafConfigService implements TelegrafOptionsFactory {
@@ -20,14 +21,14 @@ export class TelegrafConfigService implements TelegrafOptionsFactory {
         port: this._configService.get<number>('PORT'),
       },
     };
-    const devLaunchOptions: Telegraf.LaunchOptions = {};
+    const devLaunchOptions: Telegraf.LaunchOptions = { dropPendingUpdates: true };
     const launchOptions: Telegraf.LaunchOptions = env === Environment.Production ? prodLaunchOptions : devLaunchOptions;
 
     return {
       token: this._configService.get<string>('TELEGRAM_TOKEN'),
       include: [BotModule],
       launchOptions: launchOptions,
-      middlewares: [telegrafSession({ store: this._storage })],
+      middlewares: [telegrafDebounce(2000, 'inline_query'), telegrafSession({ store: this._storage })],
     };
   }
 }

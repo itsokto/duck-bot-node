@@ -21,7 +21,7 @@ export class TelegrafConfigService implements TelegrafOptionsFactory {
         port: this._configService.get<number>('PORT'),
       },
     };
-    const devLaunchOptions: Telegraf.LaunchOptions = {};
+    const devLaunchOptions: Telegraf.LaunchOptions = { dropPendingUpdates: true };
     const launchOptions: Telegraf.LaunchOptions = env === Environment.Production ? prodLaunchOptions : devLaunchOptions;
 
     return {

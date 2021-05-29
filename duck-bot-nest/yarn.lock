@@ -2039,13 +2039,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bottleneck@npm:^2.19.5":
-  version: 2.19.5
-  resolution: "bottleneck@npm:2.19.5"
-  checksum: 712d8cf9edabdc0ed02ac03c45f0fc1f033b9e57855584d86b64510adabee7ceb18658d712e2bb6f8c11facda85bfcba01e8df3d05b01dfbbe8f81ca4ab610d5
-  languageName: node
-  linkType: hard
-
 "brace-expansion@npm:^1.1.7":
   version: 1.1.11
   resolution: "brace-expansion@npm:1.1.11"
@@ -3021,7 +3014,6 @@ __metadata:
     rxjs: ^7.1.0
     supertest: ^6.1.3
     telegraf: ^4.3.0
-    telegraf-throttler: ^0.6.0
     ts-jest: ^26.5.6
     ts-loader: ^9.2.1
     ts-node: ^9.1.1
@@ -7708,17 +7700,6 @@ __metadata:
     mkdirp: ^1.0.3
     yallist: ^4.0.0
   checksum: d1d988eceb1ad2ecfaaf6fc5ecfe0c46fa005d04fe4c283355ccc52d3ffb4b6bf459a62f9ac7e36fd35251ab020399bdf527ab48b968120e06b4f61906a87d62
-  languageName: node
-  linkType: hard
-
-"telegraf-throttler@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "telegraf-throttler@npm:0.6.0"
-  dependencies:
-    bottleneck: ^2.19.5
-  peerDependencies:
-    telegraf: ^4.3.0
-  checksum: a2c4de56c02452928cac8b85903117a258b982cb4a1f651551792b705f0edb3990acb0e6d592d7bce50b0a95b8a91206f9c7d7fa0ad230f255919492aaf182bc
   languageName: node
   linkType: hard
 

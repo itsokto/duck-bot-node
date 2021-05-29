@@ -11,14 +11,16 @@ export function telegrafDebounce<TSession extends Record<string, unknown>>(
   ...updateTypes: UpdateType[]
 ): MiddlewareFn<SessionContext<TSession>> {
   return async (ctx, next) => {
+    const { from, updateType, update } = ctx;
+
     // debounce on all updates if no updateTypes specified
-    if (updateTypes.length > 0 && !updateTypes.includes(ctx.updateType)) {
+    if (!from || (updateTypes.length > 0 && !updateTypes.includes(updateType))) {
       await next();
       return;
     }
 
-    const key = `${ctx.from.id}:${ctx.updateType}`;
-    const update_id = ctx.update.update_id;
+    const key = `${from.id}:${updateType}`;
+    const update_id = update.update_id;
 
     // ensure debounce on latest update
     if (!canModify(key, update_id)) {
@@ -38,7 +40,7 @@ function canModify(key: string, update_id: number): boolean {
     return true;
   }
 
-  return callbacks.get(key).update_id < update_id;
+  return callback.update_id < update_id;
 }
 
 function createCallback(key: string, update_id: number, fn: () => Promise<void>, debounceTime: number): void {
@@ -51,11 +53,12 @@ function createCallback(key: string, update_id: number, fn: () => Promise<void>,
 }
 
 function deleteCallback(key: string): void {
-  const debounceCallback = callbacks.get(key);
-  if (!debounceCallback) {
+  const callback = callbacks.get(key);
+
+  if (!callback) {
     return;
   }
 
-  clearTimeout(debounceCallback.timeout);
+  clearTimeout(callback.timeout);
   callbacks.delete(key);
 }

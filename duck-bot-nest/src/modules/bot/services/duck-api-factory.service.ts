@@ -5,16 +5,10 @@ import { EnvironmentConfig } from '@common/types/environment.config';
 import { AxiosRequestConfig } from 'axios';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import Chance from 'chance';
-import UserAgent from 'user-agents';
-
-const excludedUserAgents: string[] = ['Safari', 'Firefox', 'Opera', 'Mac'];
 
 @Injectable()
 export class DuckApiFactory {
   private readonly _chance = new Chance();
-  private readonly _userAgents = new UserAgent((data) =>
-    excludedUserAgents.every((agent) => !data.userAgent.includes(agent)),
-  );
   private readonly _proxies: string[] = [];
   private _proxiesCache: Map<string, HttpsProxyAgent> = new Map<string, HttpsProxyAgent>();
 
@@ -67,7 +61,7 @@ export class DuckApiFactory {
   }
 
   private setHeaders(axiosRequest: AxiosRequestConfig): void {
-    const defaultHeaders = { 'user-agent': this._userAgents.random().toString() };
+    const defaultHeaders = {};
 
     axiosRequest.headers = { ...axiosRequest.headers, ...defaultHeaders };
   }

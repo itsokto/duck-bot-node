@@ -27,6 +27,7 @@ export class DuckApiFactory {
 
   private configFactory(): (defaultConfig: AxiosRequestConfig) => AxiosRequestConfig {
     return (defaultConfig: AxiosRequestConfig): AxiosRequestConfig => {
+      defaultConfig.maxRedirects = 0;
       this.setProxy(defaultConfig);
       this.setHeaders(defaultConfig);
 

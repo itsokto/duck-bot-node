@@ -2902,7 +2902,7 @@ __metadata:
     axios: ^0.21.1
     chance: ^1.1.7
     class-transformer: ^0.4.0
-    duck-node: ^1.2.2
+    duck-node: ^1.2.4
     eslint: ^7.27.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^3.4.0
@@ -2927,12 +2927,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"duck-node@npm:^1.2.2":
-  version: 1.2.2
-  resolution: "duck-node@npm:1.2.2"
+"duck-node@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "duck-node@npm:1.2.4"
   dependencies:
     axios: ^0.21.1
-  checksum: 38694f8afa2e9b3b9fb40df90f17c96c6bcf6c6b61a22c130fee94f04c985099092b1835b59c50aaa6c3c279420b3db62dfd4ca07c5bd959fd3909a2957600c8
+  checksum: 30aff5a53eee779be33611fa27089a874d3195b4d955dc635486e59100e5de8a5c420357b05ce103e10883c3da7bce94d780746b967de93a16d8c9709c02dad8
   languageName: node
   linkType: hard
 

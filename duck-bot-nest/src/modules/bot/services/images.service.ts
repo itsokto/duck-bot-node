@@ -1,4 +1,4 @@
-import { DuckApi, DuckImage, DuckResponse } from 'duck-node';
+import { DuckApi, DuckError, DuckImage, DuckResponse } from 'duck-node';
 import { InlineQueryResultGif, InlineQueryResultPhoto } from 'typegram';
 import path = require('path');
 import { SessionEntity } from '@modules/storage';
@@ -9,6 +9,13 @@ import Chance from 'chance';
 
 type JpegGifQueryResult = InlineQueryResultPhoto | InlineQueryResultGif;
 const allowedExt = ['.jpeg', '.jpg', '.gif'];
+const emptyResponse: DuckResponse<any> = {
+  vqd: {},
+  next: '',
+  results: [],
+  query: '',
+  queryEncoded: '',
+};
 
 @Injectable()
 export class ImagesService {
@@ -34,13 +41,7 @@ export class ImagesService {
         .catch(this.handleError);
     }
 
-    return Promise.resolve({
-      vqd: {},
-      next: '',
-      results: [],
-      query: '',
-      queryEncoded: '',
-    });
+    return Promise.resolve(emptyResponse);
   }
 
   mapToInlineQueryResults(source: DuckImage[]): JpegGifQueryResult[] {
@@ -78,19 +79,25 @@ export class ImagesService {
 
   private handleResponse(response: AxiosResponse<DuckResponse<DuckImage>>, query: string): DuckResponse<DuckImage> {
     response.data.query = query;
-    response.data.results = response.data.results.filter((_, i) => i < 50);
+    response.data.results = response.data.results.slice(0, 50);
     return response.data;
   }
 
-  private handleError(err: AxiosError<DuckResponse<DuckImage>>): DuckResponse<DuckImage> {
+  private handleError(err: DuckError<DuckImage> | AxiosError<DuckImage>): DuckResponse<DuckImage> {
+    if (err instanceof DuckError) {
+      console.error('[DuckApi]', err.message, err.request, err.response);
+      return emptyResponse;
+    }
+
     if (err.response?.status === 403) {
-      return err.response?.data;
+      return emptyResponse;
     }
 
     if (err.response?.status === 418) {
       console.warn('Provided config results strange error:', err.config);
-      return err.response?.data;
+      return emptyResponse;
     }
+
     throw err;
   }
 }

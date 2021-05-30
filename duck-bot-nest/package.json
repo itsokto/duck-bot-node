@@ -30,7 +30,7 @@
     "axios": "^0.21.1",
     "chance": "^1.1.7",
     "class-transformer": "^0.4.0",
-    "duck-node": "^1.2.3",
+    "duck-node": "^1.2.4",
     "https-proxy-agent": "^5.0.0",
     "nestjs-telegraf": "^2.2.2",
     "pg": "^8.6.0",

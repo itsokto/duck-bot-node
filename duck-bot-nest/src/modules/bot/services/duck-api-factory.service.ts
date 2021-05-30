@@ -7,12 +7,13 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import Chance from 'chance';
 import UserAgent from 'user-agents';
 
+const excludedUserAgents: string[] = ['Safari', 'Firefox', 'Opera', 'Mac'];
+
 @Injectable()
 export class DuckApiFactory {
   private readonly _chance = new Chance();
-  private readonly _userAgents = new UserAgent(
-    (data) =>
-      !data.userAgent.includes('Safari') && !data.userAgent.includes('Firefox') && !data.userAgent.includes('Mac'),
+  private readonly _userAgents = new UserAgent((data) =>
+    excludedUserAgents.every((agent) => !data.userAgent.includes(agent)),
   );
   private readonly _proxies: string[] = [];
   private _proxiesCache: Map<string, HttpsProxyAgent> = new Map<string, HttpsProxyAgent>();

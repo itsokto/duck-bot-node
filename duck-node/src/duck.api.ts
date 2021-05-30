@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { DuckImage, DuckResponse, DuckStrict } from './models';
+import { DuckImage, DuckResponse, DuckStrict, DuckError } from './models';
 import constants from './constants';
 
 const defaultFactory = (requestConfig: AxiosRequestConfig): AxiosRequestConfig => {
@@ -35,14 +35,14 @@ export class DuckApi {
   }
 
   async getToken(query: string): Promise<string> {
-    const page = await this._client.get<string>('', { params: { q: query } }).then((res) => res.data);
+    const response = await this._client.get<string>('', { params: { q: query } });
 
-    const math = constants.vqdRegex.exec(page);
+    const math = constants.vqdRegex.exec(response.data);
     if (math?.groups) {
       return math.groups['vqd'];
     }
 
-    throw 'No match for vqd-token.';
+    throw new DuckError('No match for vqd-token.', response.request, response.data);
   }
 
   async getImages(query: string, strict: DuckStrict = DuckStrict.Off): Promise<AxiosResponse<DuckResponse<DuckImage>>> {

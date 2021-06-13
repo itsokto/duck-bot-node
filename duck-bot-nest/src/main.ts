@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import appInsights from 'applicationinsights';
+import * as appInsights from 'applicationinsights';
 
 async function bootstrap() {
   if (process.env.NODE_ENV === 'production') {

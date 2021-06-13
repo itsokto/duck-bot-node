@@ -27,6 +27,7 @@
     "@nestjs/core": "^7.6.17",
     "@nestjs/typeorm": "^7.1.5",
     "applicationinsights": "2.1.1",
+    "applicationinsights-native-metrics": "^0.0.6",
     "axios": "^0.21.1",
     "chance": "^1.1.7",
     "class-transformer": "^0.4.0",

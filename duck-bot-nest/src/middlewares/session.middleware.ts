@@ -1,42 +1,7 @@
-import { Repository } from 'typeorm';
-import { SessionStore, SessionContext } from 'telegraf/typings/session';
 import { Context, MiddlewareFn, session } from 'telegraf';
+import { SessionContext, SessionStore } from 'telegraf/typings/session';
 
-type KeyColumn = 'key';
-const key: KeyColumn = 'key';
-const omitKeys = [key, '__scenes'];
-
-export class TypeOrmStorage<T extends Pick<T, KeyColumn>> implements SessionStore<T> {
-  constructor(private _repository: Repository<T>) {}
-
-  get(name: string): Promise<T | undefined> {
-    return this._repository.findOne(name);
-  }
-
-  set(name: string, value: T): Promise<any> {
-    if (!value?.key) {
-      value.key = name;
-    }
-
-    const keys = Object.entries(value).flatMap(([key, value]) => (value && !omitKeys.includes(key) ? [key] : []));
-
-    return this._repository
-      .createQueryBuilder()
-      .insert()
-      .values(value as any)
-      .orUpdate({
-        conflict_target: [key],
-        overwrite: keys,
-      })
-      .execute();
-  }
-
-  delete(name: string): Promise<any> {
-    return this._repository.delete(name);
-  }
-}
-
-async function getSessionKey(ctx: Context): Promise<string | undefined> {
+const getSessionKey = async (ctx: Context): Promise<string | undefined> => {
   const fromId = ctx.from?.id;
   const chatId = ctx.chat?.id;
 
@@ -53,18 +18,18 @@ async function getSessionKey(ctx: Context): Promise<string | undefined> {
   }
 
   return `${fromId}:${chatId}`;
-}
+};
 
 type SessionOptions<S> = {
   getSessionKey?: (ctx: Context) => Promise<string | undefined>;
   store?: SessionStore<S>;
 };
 
-export function telegrafSession<S extends Record<string, any>>(
+export const telegrafSession = <S extends Record<string, any>>(
   options?: SessionOptions<S>,
-): MiddlewareFn<SessionContext<S>> {
+): MiddlewareFn<SessionContext<S>> => {
   options ??= {};
   options.getSessionKey ??= getSessionKey;
 
   return session(options);
-}
+};

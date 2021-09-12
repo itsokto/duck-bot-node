@@ -10,6 +10,7 @@ export interface EnvironmentConfig {
   TELEGRAM_TOKEN: string;
   TELEGRAM_WEBHOOK_DOMAIN?: string;
   DATABASE_URL: string;
+  REDIS_URL: string;
   PORT?: number;
   PROXY?: string;
 }

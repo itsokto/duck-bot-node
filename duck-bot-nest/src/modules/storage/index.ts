@@ -1,2 +1,2 @@
-export { StorageModule, TelegramSessionStore } from './storage.module';
+export { StorageModule } from './storage.module';
 export * from './entities/';

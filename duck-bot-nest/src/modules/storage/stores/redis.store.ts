@@ -8,7 +8,7 @@ export class RedisStore<T extends SessionData> implements SessionStore<T> {
   constructor(@Inject(CACHE_MANAGER) private _cacheManager: Cache) {}
 
   get(name: string): Promise<T | undefined> {
-    return this._cacheManager.get(name);
+    return this._cacheManager.get(name) ?? undefined;
   }
 
   set(name: string, value: T): Promise<any> {

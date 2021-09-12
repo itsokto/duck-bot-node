@@ -1,10 +1,10 @@
 import { SessionStore } from 'telegraf/typings/session';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { KeyColumn } from '@modules/storage/stores';
+import { SessionData, omitKeys } from '@modules/storage/stores';
 import { SessionEntity } from '@modules/storage';
 
-export class RedisStore<T extends Pick<T, KeyColumn>> implements SessionStore<T> {
+export class RedisStore<T extends SessionData> implements SessionStore<T> {
   constructor(@Inject(CACHE_MANAGER) private _cacheManager: Cache) {}
 
   get(name: string): Promise<T | undefined> {
@@ -12,8 +12,8 @@ export class RedisStore<T extends Pick<T, KeyColumn>> implements SessionStore<T>
   }
 
   set(name: string, value: T): Promise<any> {
-    if (!value?.key) {
-      value.key = name;
+    for (const omitKey of omitKeys) {
+      delete value[omitKey];
     }
 
     return this._cacheManager.set(name, value);

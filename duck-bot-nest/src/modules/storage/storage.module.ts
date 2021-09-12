@@ -1,11 +1,22 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SessionEntity } from './entities/session.entity';
-import { TelegramSessionStore } from '@modules/storage/stores/redis.store';
+import { AppConfigModule, TypeOrmConfigService } from '@modules/app-config';
+import { RedisConfigService } from '@modules/app-config/services/redis.config.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SessionEntity])],
-  providers: [TelegramSessionStore],
-  exports: [TypeOrmModule, TelegramSessionStore],
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forRootAsync({
+      imports: [AppConfigModule],
+      useExisting: TypeOrmConfigService,
+    }),
+    CacheModule.registerAsync({
+      imports: [AppConfigModule],
+      useExisting: RedisConfigService,
+    }),
+  ],
+  providers: [ConfigService, TypeOrmConfigService, RedisConfigService],
+  exports: [TypeOrmModule, CacheModule],
 })
 export class StorageModule {}

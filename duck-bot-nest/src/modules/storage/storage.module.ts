@@ -1,22 +1,21 @@
 import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppConfigModule, TypeOrmConfigService } from '@modules/app-config';
-import { RedisConfigService } from '@modules/app-config/services/redis.config.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmConfigService, RedisConfigService } from '@modules/storage/services';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forRootAsync({
-      imports: [AppConfigModule],
+      imports: [StorageModule],
       useExisting: TypeOrmConfigService,
     }),
     CacheModule.registerAsync({
-      imports: [AppConfigModule],
+      imports: [StorageModule],
       useExisting: RedisConfigService,
     }),
   ],
   providers: [ConfigService, TypeOrmConfigService, RedisConfigService],
-  exports: [TypeOrmModule, CacheModule],
+  exports: [TypeOrmModule, CacheModule, TypeOrmConfigService, RedisConfigService],
 })
 export class StorageModule {}

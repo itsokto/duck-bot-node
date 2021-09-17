@@ -7,8 +7,9 @@ import { SessionEntity } from '@modules/storage';
 export class RedisStore<T extends SessionData> implements SessionStore<T> {
   constructor(@Inject(CACHE_MANAGER) private _cacheManager: Cache) {}
 
-  get(name: string): Promise<T | undefined> {
-    return this._cacheManager.get(name) ?? undefined;
+  async get(name: string): Promise<T | undefined> {
+    const session = await this._cacheManager.get<T>(name);
+    return session || undefined;
   }
 
   set(name: string, value: T): Promise<any> {

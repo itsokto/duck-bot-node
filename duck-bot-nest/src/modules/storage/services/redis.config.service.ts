@@ -1,7 +1,7 @@
-import { CacheModuleOptions, CacheOptionsFactory, CacheStoreFactory, Injectable } from '@nestjs/common';
+import { CacheModuleOptions, CacheOptionsFactory, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentConfig } from '@common/types/environment.config';
-import * as redisStore from 'cache-manager-redis-store';
+import * as redisStore from 'cache-manager-ioredis';
 
 @Injectable()
 export class RedisConfigService implements CacheOptionsFactory {
@@ -9,7 +9,7 @@ export class RedisConfigService implements CacheOptionsFactory {
 
   createCacheOptions(): CacheModuleOptions {
     return {
-      store: redisStore as CacheStoreFactory,
+      store: redisStore,
       url: this._configService.get('REDIS_URL'),
       ttl: 5000,
     };

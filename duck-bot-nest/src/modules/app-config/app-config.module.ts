@@ -1,26 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { StorageModule, TelegramSessionStorage } from '@modules/storage/';
-import { TelegrafConfigService } from './services/telegraf.config.service';
-import { TypeOrmConfigService } from './services/typeorm.config.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { StorageModule } from '@modules/storage';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { BotModule } from '@modules/bot';
+import { TelegramSessionStore } from '@modules/storage/stores/redis.store';
+import { TelegrafConfigService } from '@modules/app-config/services';
 
 @Module({
   imports: [
     ConfigModule,
     StorageModule,
-    TypeOrmModule.forRootAsync({
-      imports: [AppConfigModule],
-      useExisting: TypeOrmConfigService,
-    }),
     TelegrafModule.forRootAsync({
-      imports: [AppConfigModule, BotModule],
+      imports: [AppConfigModule, StorageModule, BotModule],
       useExisting: TelegrafConfigService,
     }),
   ],
-  providers: [TelegrafConfigService, TypeOrmConfigService, ConfigService, TelegramSessionStorage],
-  exports: [TelegrafConfigService, TypeOrmConfigService],
+  providers: [TelegrafConfigService, ConfigService, TelegramSessionStore],
+  exports: [TelegrafConfigService],
 })
 export class AppConfigModule {}

@@ -1,0 +1,29 @@
+import { SessionStore } from 'telegraf/typings/session';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { Cache } from 'cache-manager';
+import { SessionData, omitKeys } from '@modules/storage/stores';
+import { SessionEntity } from '@modules/storage';
+
+export class RedisStore<T extends SessionData> implements SessionStore<T> {
+  constructor(@Inject(CACHE_MANAGER) private _cacheManager: Cache) {}
+
+  async get(name: string): Promise<T | undefined> {
+    const session = await this._cacheManager.get<T>(name);
+    return session || undefined;
+  }
+
+  set(name: string, value: T): Promise<any> {
+    for (const omitKey of omitKeys) {
+      delete value[omitKey];
+    }
+
+    return this._cacheManager.set(name, value);
+  }
+
+  delete(name: string): Promise<any> {
+    return this._cacheManager.del(name);
+  }
+}
+
+@Injectable()
+export class TelegramSessionStore extends RedisStore<SessionEntity> {}

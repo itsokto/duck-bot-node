@@ -3,14 +3,14 @@ import { Injectable } from '@nestjs/common';
 import { TelegrafModuleOptions, TelegrafOptionsFactory } from 'nestjs-telegraf';
 import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
-import { TelegramSessionStorage } from '@modules/storage';
 import { BotModule } from '@modules/bot';
 import { telegrafSession } from '@middlewares/session.middleware';
 import { telegrafDebounce } from '@middlewares/debounce.middleware';
+import { TelegramSessionStore } from '@modules/storage/stores/redis.store';
 
 @Injectable()
 export class TelegrafConfigService implements TelegrafOptionsFactory {
-  constructor(private _configService: ConfigService<EnvironmentConfig>, private _storage: TelegramSessionStorage) {}
+  constructor(private _configService: ConfigService<EnvironmentConfig>, private _storage: TelegramSessionStore) {}
 
   createTelegrafOptions(): TelegrafModuleOptions {
     const env = this._configService.get<Environment>('NODE_ENV', Environment.Development);

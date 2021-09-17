@@ -1,19 +1,21 @@
-import { Injectable, Module } from '@nestjs/common';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { SessionEntity } from './entities/session.entity';
-import { TypeOrmStorage } from '@middlewares/session.middleware';
-import { Repository } from 'typeorm';
-
-@Injectable()
-export class TelegramSessionStorage extends TypeOrmStorage<SessionEntity> {
-  constructor(@InjectRepository(SessionEntity) _repository: Repository<SessionEntity>) {
-    super(_repository);
-  }
-}
+import { CacheModule, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmConfigService, RedisConfigService } from '@modules/storage/services';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SessionEntity])],
-  providers: [TelegramSessionStorage],
-  exports: [TypeOrmModule, TelegramSessionStorage],
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forRootAsync({
+      imports: [StorageModule],
+      useExisting: TypeOrmConfigService,
+    }),
+    CacheModule.registerAsync({
+      imports: [StorageModule],
+      useExisting: RedisConfigService,
+    }),
+  ],
+  providers: [ConfigService, TypeOrmConfigService, RedisConfigService],
+  exports: [TypeOrmModule, CacheModule, TypeOrmConfigService, RedisConfigService],
 })
 export class StorageModule {}

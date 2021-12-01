@@ -5,7 +5,7 @@ import { CallbackQuery, InlineKeyboardButton } from 'typegram';
 import { DuckImage, DuckResponse, DuckStrict } from 'duck-node';
 import { ImagesService } from './services/images.service';
 import { CallbackData, CallBackDataType } from '@modules/bot/types/callback.data';
-import { deserialize, serialize } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import DataCallbackQuery = CallbackQuery.DataCallbackQuery;
 
 @Update()
@@ -64,7 +64,7 @@ export class BotUpdate {
       return;
     }
 
-    const { type, data } = deserialize(CallbackData, (callbackQuery as DataCallbackQuery)?.data);
+    const { type, data } = plainToInstance(CallbackData, JSON.parse((callbackQuery as DataCallbackQuery)?.data));
 
     if (type === CallBackDataType.StrictCommand && session.strict !== data) {
       session.strict = data;
@@ -128,7 +128,7 @@ function* generateKeyboard(defaultValue?: DuckStrict): Generator<InlineKeyboardB
 
     yield {
       text: value === defaultValue ? `✅ ${key}` : key,
-      callback_data: serialize(data),
+      callback_data: JSON.stringify(instanceToPlain(data)),
     };
   }
 }

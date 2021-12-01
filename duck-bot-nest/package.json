@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
     "prebuild": "rimraf dist",

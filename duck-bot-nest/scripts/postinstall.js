@@ -6,7 +6,8 @@ const fs = require('fs-extra');
 const path = require('path');
 
 const updateJSDomTypeDefinition = () => {
-  const filePath = path.join('node_modules', '@types', 'jsdom', 'base.d.ts');
+  const relativeFilePath = path.join('node_modules', '@types', 'jsdom', 'base.d.ts');
+  const filePath = path.join(path.dirname(__dirname), relativeFilePath);
   if (!fs.existsSync(filePath)) {
     console.warn("JSdom base.d.ts not found '" + filePath);
     return;

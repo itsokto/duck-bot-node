@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-jupyter/blob/main/build/ci/postInstall.js
 
 const { EOL } = require('os');
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 
 const updateJSDomTypeDefinition = () => {

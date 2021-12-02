@@ -7,8 +7,11 @@ import { ImagesService } from './services/images.service';
 import { CallbackData, CallBackDataType } from '@modules/bot/types/callback.data';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import DataCallbackQuery = CallbackQuery.DataCallbackQuery;
+import { UseFilters } from '@nestjs/common';
+import { TelegrafExceptionFilters } from '@common/filters/telegraf-exception.filter';
 
 @Update()
+@UseFilters(TelegrafExceptionFilters)
 export class BotUpdate {
   constructor(private readonly _imageService: ImagesService) {}
 

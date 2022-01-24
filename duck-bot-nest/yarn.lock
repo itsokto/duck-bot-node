@@ -2560,15 +2560,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.21.1":
-  version: 0.21.1
-  resolution: "axios@npm:0.21.1"
-  dependencies:
-    follow-redirects: ^1.10.0
-  checksum: c87915fa0b18c15c63350112b6b3563a3e2ae524d7707de0a73d2e065e0d30c5d3da8563037bc29d4cc1b7424b5a350cb7274fa52525c6c04a615fe561c6ab11
-  languageName: node
-  linkType: hard
-
 "axios@npm:^0.25.0":
   version: 0.25.0
   resolution: "axios@npm:0.25.0"
@@ -3571,7 +3562,7 @@ __metadata:
     cache-manager-ioredis: ^2.1.0
     chance: ^1.1.8
     class-transformer: ^0.5.1
-    duck-node: ^1.2.4
+    duck-node: ^1.2.5
     eslint: ^8.7.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^4.0.0
@@ -3595,12 +3586,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"duck-node@npm:^1.2.4":
-  version: 1.2.4
-  resolution: "duck-node@npm:1.2.4"
+"duck-node@npm:^1.2.5":
+  version: 1.2.5
+  resolution: "duck-node@npm:1.2.5"
   dependencies:
-    axios: ^0.21.1
-  checksum: 30aff5a53eee779be33611fa27089a874d3195b4d955dc635486e59100e5de8a5c420357b05ce103e10883c3da7bce94d780746b967de93a16d8c9709c02dad8
+    axios: ^0.25.0
+  checksum: 21591a454b4a4e9b9fd10c1fc42ded2a0bfa676c12f7c97fa7b039db18c66bbacf413c2717796c4c73d4fc953619fff2444a1c78e42183edb523887230453fd1
   languageName: node
   linkType: hard
 
@@ -4135,16 +4126,6 @@ __metadata:
   version: 3.1.1
   resolution: "flatted@npm:3.1.1"
   checksum: 508935e3366d95444131f0aaa801a4301f24ea5bcb900d12764e7335b46b910730cc1b5bcfcfb8eccb7c8db261ba0671c6a7ca30d10870ff7a7756dc7e731a7a
-  languageName: node
-  linkType: hard
-
-"follow-redirects@npm:^1.10.0":
-  version: 1.14.0
-  resolution: "follow-redirects@npm:1.14.0"
-  peerDependenciesMeta:
-    debug:
-      optional: true
-  checksum: a6568930fb97f6f4c12eac52acc109e8677d4b26fcae463bab7de50c43e44886b94784be6608dd8f2ab4b015328377fb4be2e83abd2c8d6bc39ffe1cf11f7b5a
   languageName: node
   linkType: hard
 

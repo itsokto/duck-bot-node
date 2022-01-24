@@ -36,7 +36,7 @@
     "cache-manager-ioredis": "^2.1.0",
     "chance": "^1.1.8",
     "class-transformer": "^0.5.1",
-    "duck-node": "^1.2.4",
+    "duck-node": "^1.2.5",
     "https-proxy-agent": "^5.0.0",
     "nestjs-telegraf": "^2.4.0",
     "pg": "^8.7.1",

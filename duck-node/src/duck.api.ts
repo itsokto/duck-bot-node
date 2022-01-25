@@ -35,7 +35,7 @@ export class DuckApi {
   }
 
   async getToken(query: string): Promise<string> {
-    const response = await this._client.get<string>('', { params: { q: query } });
+    const response = await this._client.get<string>('/', { params: { q: query } });
 
     const math = constants.vqdRegex.exec(response.data);
     if (math?.groups) {
@@ -47,7 +47,7 @@ export class DuckApi {
 
   async getImages(query: string, strict: DuckStrict = DuckStrict.Off): Promise<AxiosResponse<DuckResponse<DuckImage>>> {
     const vqd = await this.getToken(query);
-    return this._client.get<DuckResponse<DuckImage>>('i.js', {
+    return this._client.get<DuckResponse<DuckImage>>(constants.imagesURL, {
       params: { q: query, p: strict, vqd, o: 'json', f: ',,,', l: 'us-en' },
     });
   }

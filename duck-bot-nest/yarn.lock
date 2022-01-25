@@ -3562,7 +3562,7 @@ __metadata:
     cache-manager-ioredis: ^2.1.0
     chance: ^1.1.8
     class-transformer: ^0.5.1
-    duck-node: ^1.2.5
+    duck-node: ^1.2.6
     eslint: ^8.7.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-prettier: ^4.0.0
@@ -3586,12 +3586,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"duck-node@npm:^1.2.5":
-  version: 1.2.5
-  resolution: "duck-node@npm:1.2.5"
+"duck-node@npm:^1.2.6":
+  version: 1.2.6
+  resolution: "duck-node@npm:1.2.6"
   dependencies:
     axios: ^0.25.0
-  checksum: 21591a454b4a4e9b9fd10c1fc42ded2a0bfa676c12f7c97fa7b039db18c66bbacf413c2717796c4c73d4fc953619fff2444a1c78e42183edb523887230453fd1
+  checksum: c2efb2205a0630616b5a102784ac1465ba4019b2997e1d0387a0d308c23387f4b78bca442b8848c5ea67f8907b3d715ef9ca24181f56cd324356c6a2a3a182ab
   languageName: node
   linkType: hard
 
